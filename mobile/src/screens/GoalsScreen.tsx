@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { goalService } from '../services/api';
 import CreateGoalModal from '../modals/CreateGoal';
 
@@ -41,6 +42,13 @@ export default function GoalsScreen({ navigation }: any) {
   useEffect(() => {
     loadGoals();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // update the goals list
+      loadGoals();
+    }, [])
+  );
 
   useEffect(() => {
     navigation.setOptions({

@@ -56,8 +56,25 @@ export default function GoalDetailScreen({ route, navigation }: any) {
   const handleUpdateStatus = async (newStatus: string) => {
     if (!goal) return;
 
+    // Keep progress in sync with status so the UI tells a consistent story
+    let newProgress = goal.progress;
+    if (newStatus === 'not_started') {
+      newProgress = 0;
+    } else if (newStatus === 'completed') {
+      newProgress = 100;
+    } else if (
+      newStatus === 'in_progress' &&
+      (goal.progress === 0 || goal.progress === 100)
+    ) {
+      // Give users a sensible default if they move into "in progress" from 0% or 100%
+      newProgress = 50;
+    }
+
     try {
-      const updated = await goalService.updateGoal(goal.id, { status: newStatus });
+      const updated = await goalService.updateGoal(goal.id, {
+        status: newStatus,
+        progress: newProgress,
+      });
       setGoal(updated);
     } catch (error) {
       Alert.alert('Error', 'Failed to update goal status');
