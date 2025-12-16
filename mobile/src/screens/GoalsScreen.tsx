@@ -8,8 +8,10 @@ import {
   RefreshControl,
   ActivityIndicator,
   Alert,
+  Dimensions,
 } from 'react-native';
 import { goalService } from '../services/api';
+import { colors } from '../theme/colors';
 
 interface Goal {
   id: number;
@@ -47,17 +49,20 @@ export default function GoalsScreen({ navigation }: any) {
     // 3. Update goals state with response.goals
     // 4. Show error with Alert.alert if it fails
     // 5. Set loading to false when done
-    
+
     // Your code here:
-    // try {
-    //   setLoading(true);
-    //   const response = await goalService.getGoals();
-    //   setGoals(response.goals || []);
-    // } catch (error) {
-    //   Alert.alert('Error', 'Failed to load goals');
-    // } finally {
-    //   setLoading(false);
-    // }
+    try {
+      setLoading(true);
+      const response = await goalService.getGoals();
+      setGoals(response.goals || []);
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.error ||
+                          error.message ||
+                          'Unable to load goals. Please check your internet connection.';
+      Alert.alert('Error', errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onRefresh = async () => {
@@ -89,7 +94,7 @@ export default function GoalsScreen({ navigation }: any) {
   if (loading && goals.length === 0) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
@@ -118,41 +123,46 @@ export default function GoalsScreen({ navigation }: any) {
   );
 }
 
+const { width, height } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.surface,
   },
   centerContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: width * 0.05, // 5% of screen width
   },
   list: {
-    padding: 16,
+    paddingHorizontal: 16, // 16px from left and right
   },
   goalCard: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    backgroundColor: colors.card,
+    borderRadius: 16,
+    padding: width * 0.04, // 4% of screen width
+    marginBottom: height * 0.015, // 1.5% of screen height
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 5,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   goalTitle: {
-    fontSize: 18,
+    fontSize: Math.min(width * 0.045, 18), // Responsive font size
     fontWeight: '600',
     marginBottom: 8,
-    color: '#1a1a1a',
+    color: colors.primary,
   },
   goalDescription: {
-    fontSize: 14,
-    color: '#666',
+    fontSize: Math.min(width * 0.035, 14), // Responsive font size
+    color: colors.textSecondary,
     marginBottom: 12,
+    lineHeight: Math.min(width * 0.05, 20), // Responsive line height
   },
   goalFooter: {
     flexDirection: 'row',
@@ -160,38 +170,46 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   statusBadge: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 12,
+    paddingHorizontal: width * 0.03, // 3% of screen width
+    paddingVertical: height * 0.005, // 0.5% of screen height
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   statusnot_started: {
-    backgroundColor: '#e0e0e0',
+    backgroundColor: colors.notStarted,
+    borderColor: colors.secondary,
   },
   statusin_progress: {
-    backgroundColor: '#fff3cd',
+    backgroundColor: colors.inProgress,
+    borderColor: colors.primary,
   },
   statuscompleted: {
-    backgroundColor: '#d4edda',
+    backgroundColor: colors.completed,
+    borderColor: colors.primary,
   },
   statusText: {
-    fontSize: 12,
+    fontSize: Math.min(width * 0.03, 12), // Responsive font size
     fontWeight: '600',
     textTransform: 'capitalize',
+    color: colors.text,
   },
   progressText: {
-    fontSize: 14,
+    fontSize: Math.min(width * 0.035, 14), // Responsive font size
     fontWeight: '600',
-    color: '#007AFF',
+    color: colors.accent,
   },
   emptyText: {
-    fontSize: 20,
+    fontSize: Math.min(width * 0.05, 20), // Responsive font size
     fontWeight: '600',
-    color: '#666',
+    color: colors.textSecondary,
     marginBottom: 8,
+    textAlign: 'center',
   },
   emptySubtext: {
-    fontSize: 14,
-    color: '#999',
+    fontSize: Math.min(width * 0.035, 14), // Responsive font size
+    color: colors.textTertiary,
+    textAlign: 'center',
   },
 });
 
