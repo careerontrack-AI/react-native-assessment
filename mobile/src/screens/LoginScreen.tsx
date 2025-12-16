@@ -9,8 +9,10 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  Dimensions,
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
+import { colors } from '../theme/colors';
 
 // TODO: Task 1 - Complete Login Screen
 // The UI is already set up! You just need to:
@@ -54,20 +56,23 @@ export default function LoginScreen() {
     // 3. Call login(email, password) from useAuth
     // 4. Show error with Alert.alert if it fails
     // 5. Set loading to false when done
-    
+
     if (!validateForm()) {
       return;
     }
 
     // Your code here:
-    // setLoading(true);
-    // try {
-    //   await login(email, password);
-    // } catch (error: any) {
-    //   Alert.alert('Login Failed', error.response?.data?.error || 'Invalid email or password');
-    // } finally {
-    //   setLoading(false);
-    // }
+    setLoading(true);
+    try {
+      await login(email, password);
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.error ||
+                          error.message ||
+                          'Unable to connect to server. Please check your internet connection.';
+      Alert.alert('Login Failed', errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -128,77 +133,90 @@ export default function LoginScreen() {
   );
 }
 
+const { width, height } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.background,
   },
   content: {
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
+    paddingHorizontal: width * 0.08, // 8% of screen width
+    paddingVertical: height * 0.05, // 5% of screen height
   },
   title: {
-    fontSize: 32,
+    fontSize: Math.min(width * 0.08, 32), // Responsive font size
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 8,
-    color: '#1a1a1a',
+    color: colors.primary,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: Math.min(width * 0.04, 16), // Responsive font size
     textAlign: 'center',
-    marginBottom: 40,
-    color: '#666',
+    marginBottom: height * 0.05, // 5% of screen height
+    color: colors.textSecondary,
   },
   form: {
     width: '100%',
   },
   inputContainer: {
-    marginBottom: 20,
+    marginBottom: height * 0.025, // 2.5% of screen height
   },
   label: {
-    fontSize: 14,
+    fontSize: Math.min(width * 0.035, 14), // Responsive font size
     fontWeight: '600',
     marginBottom: 8,
-    color: '#333',
+    color: colors.text,
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    backgroundColor: '#f9f9f9',
+    borderWidth: 2,
+    borderColor: colors.inputBorder,
+    borderRadius: 12,
+    padding: height * 0.018, // Responsive padding
+    fontSize: Math.min(width * 0.04, 16), // Responsive font size
+    backgroundColor: colors.inputBackground,
+    color: colors.text,
   },
   inputError: {
-    borderColor: '#ff4444',
+    borderColor: colors.danger,
   },
   errorText: {
-    color: '#ff4444',
-    fontSize: 12,
+    color: colors.danger,
+    fontSize: Math.min(width * 0.03, 12), // Responsive font size
     marginTop: 4,
   },
   button: {
-    backgroundColor: '#007AFF',
-    borderRadius: 8,
-    padding: 16,
+    backgroundColor: colors.buttonPrimary,
+    borderRadius: 12,
+    padding: height * 0.02, // Responsive padding
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: height * 0.015, // Responsive margin
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
   buttonDisabled: {
     opacity: 0.6,
+    shadowOpacity: 0.1,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 16,
+    color: colors.background,
+    fontSize: Math.min(width * 0.04, 16), // Responsive font size
     fontWeight: '600',
   },
   demoText: {
     textAlign: 'center',
-    marginTop: 20,
-    color: '#999',
-    fontSize: 12,
+    marginTop: height * 0.03, // Responsive margin
+    color: colors.textTertiary,
+    fontSize: Math.min(width * 0.03, 12), // Responsive font size
+    backgroundColor: colors.highlight,
+    padding: height * 0.01,
+    borderRadius: 8,
   },
 });
 
