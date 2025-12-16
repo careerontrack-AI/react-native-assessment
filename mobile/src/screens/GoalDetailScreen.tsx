@@ -71,19 +71,19 @@ export default function GoalDetailScreen({ route, navigation }: any) {
       'Delete Goal',
       'Are you sure you want to delete this goal?',
       [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await goalService.deleteGoal(goal.id);
-              navigation.goBack();
-            } catch (error) {
-              Alert.alert('Error', 'Failed to delete goal');
-            }
-          },
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await goalService.deleteGoal(goal.id);
+            navigation.goBack();
+          } catch (error) {
+            Alert.alert('Error', 'Failed to delete goal');
+          }
         },
+      },
       ]
     );
   };
@@ -108,7 +108,7 @@ export default function GoalDetailScreen({ route, navigation }: any) {
     <ScrollView style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.title}>{goal.title}</Text>
-        
+
         {goal.description && (
           <Text style={styles.description}>{goal.description}</Text>
         )}
@@ -169,6 +169,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    paddingTop: 40,
   },
   centerContainer: {
     flex: 1,
