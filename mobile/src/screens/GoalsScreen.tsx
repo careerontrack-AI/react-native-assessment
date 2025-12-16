@@ -10,6 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import { goalService } from '../services/api';
+import CreateGoalModal from '../modals/CreateGoal';
 
 interface Goal {
   id: number;
@@ -35,10 +36,24 @@ export default function GoalsScreen({ navigation }: any) {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(false); // By default, loading will be false, until the goals will actually start fetching.
   const [refreshing, setRefreshing] = useState(false);
+  const [createModalVisible, setCreateModalVisible] = useState(false);
 
   useEffect(() => {
     loadGoals();
   }, []);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          style={styles.headerButton}
+          onPress={() => setCreateModalVisible(true)}
+        >
+          <Text style={styles.headerButtonText}>+</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
   const loadGoals = async () => {
     // TODO: Implement goal fetching
@@ -53,8 +68,13 @@ export default function GoalsScreen({ navigation }: any) {
       setLoading(true);
       // Call goalService.getGoals()
       const response = await goalService.getGoals();
-      // Update goals state with response.goals
-      setGoals(response.goals || []);
+      // Update goals state with response.goals sorted by createdAt (newest first)
+      const fetchedGoals: Goal[] = response.goals || [];
+      fetchedGoals.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+      setGoals(fetchedGoals);
     } catch (error) {
       // Show error with Alert.alert if it fails
       Alert.alert('Error', 'Failed to load goals');
@@ -68,6 +88,15 @@ export default function GoalsScreen({ navigation }: any) {
     setRefreshing(true);
     await loadGoals();
     setRefreshing(false);
+  };
+
+  const handleGoalCreated = (newGoal: Goal) => {
+    setGoals((prev) =>
+      [newGoal, ...prev].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
+    );
   };
 
   const renderGoal = ({ item }: { item: Goal }) => (
@@ -103,6 +132,19 @@ export default function GoalsScreen({ navigation }: any) {
       <View style={styles.centerContainer}>
         <Text style={styles.emptyText}>No goals yet</Text>
         <Text style={styles.emptySubtext}>Create your first career goal!</Text>
+
+        <TouchableOpacity
+          style={styles.primaryButton}
+          onPress={() => setCreateModalVisible(true)}
+        >
+          <Text style={styles.primaryButtonText}>Create Goal</Text>
+        </TouchableOpacity>
+
+        <CreateGoalModal
+          visible={createModalVisible}
+          onClose={() => setCreateModalVisible(false)}
+          onCreated={handleGoalCreated}
+        />
       </View>
     );
   }
@@ -117,6 +159,12 @@ export default function GoalsScreen({ navigation }: any) {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+      />
+
+      <CreateGoalModal
+        visible={createModalVisible}
+        onClose={() => setCreateModalVisible(false)}
+        onCreated={handleGoalCreated}
       />
     </View>
   );
@@ -196,6 +244,34 @@ const styles = StyleSheet.create({
   emptySubtext: {
     fontSize: 14,
     color: '#999',
+  },
+  headerButton: {
+    marginRight: 16,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#007AFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerButtonText: {
+    color: '#fff',
+    fontSize: 20,
+    lineHeight: 20,
+    textAlign: 'center',
+    height: 16,
+  },
+  primaryButton: {
+    marginTop: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+    backgroundColor: '#007AFF',
+  },
+  primaryButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 
