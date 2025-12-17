@@ -21,16 +21,6 @@ interface Goal {
   updatedAt: string;
 }
 
-// TODO: Task 2 - Display Goals List
-// The UI is already set up! You just need to:
-// 1. Fetch goals when screen loads (use useEffect)
-// 2. Call goalService.getGoals() to get the data
-// 3. Update the goals state with the response
-// 4. Show loading indicator while fetching
-// 5. Show error message if API call fails
-//
-// Hint: The list rendering is already done, just implement loadGoals()!
-
 export default function GoalsScreen({ navigation }: any) {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,23 +31,15 @@ export default function GoalsScreen({ navigation }: any) {
   }, []);
 
   const loadGoals = async () => {
-    // TODO: Implement goal fetching
-    // 1. Set loading to true
-    // 2. Call goalService.getGoals()
-    // 3. Update goals state with response.goals
-    // 4. Show error with Alert.alert if it fails
-    // 5. Set loading to false when done
-    
-    // Your code here:
-    // try {
-    //   setLoading(true);
-    //   const response = await goalService.getGoals();
-    //   setGoals(response.goals || []);
-    // } catch (error) {
-    //   Alert.alert('Error', 'Failed to load goals');
-    // } finally {
-    //   setLoading(false);
-    // }
+    try {
+      setLoading(true);
+      const response = await goalService.getGoals();
+      setGoals(response.goals || []);
+    } catch (error) {
+      Alert.alert('Error', 'Failed to load goals');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onRefresh = async () => {
