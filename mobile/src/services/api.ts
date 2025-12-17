@@ -26,10 +26,12 @@ api.interceptors.request.use(async (config) => {
 
 // Handle errors
 api.interceptors.response.use(
-  (response) => response,
-  (error) => {
+  (response) => {
+    return response
+  },
+  async (error) => {
     if (error.response?.status === 401) {
-      // Handle unauthorized - could logout user here
+      await AsyncStorage.getItem('auth_token');
     }
     return Promise.reject(error);
   }
