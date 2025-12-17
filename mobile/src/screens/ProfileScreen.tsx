@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
 import { userService } from '../services/api';
 
@@ -79,16 +80,16 @@ export default function ProfileScreen() {
 
   if (loading && !user) {
     return (
-      <View style={styles.centerContainer}>
+      <SafeAreaView style={styles.centerContainer} edges={['bottom']}>
         <ActivityIndicator size="large" color="#007AFF" />
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Profile</Text>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.content}>
 
         <View style={styles.section}>
           <Text style={styles.label}>Name</Text>
@@ -163,7 +164,8 @@ export default function ProfileScreen() {
           <Text style={[styles.buttonText, styles.logoutButtonText]}>Logout</Text>
         </TouchableOpacity>
       </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -171,6 +173,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  scrollView: {
+    flex: 1,
   },
   centerContainer: {
     flex: 1,
