@@ -21,25 +21,15 @@ CareerOnTrack is a career development application that enables users to set, tra
 
 ### Light Theme
 
-| Screen | Screenshot |
-|--------|-----------|
-| **Login Screen** | <img src="./screenshots/lightTheme/login1.png" width="250" /> |
-| **Login Screen (Validation)** | <img src="./screenshots/lightTheme/login2.png" width="250" /> |
-| **Home Dashboard** | <img src="./screenshots/lightTheme/dashboard3.png" width="250" /> |
-| **Goals List** | <img src="./screenshots/lightTheme/goals4.png" width="250" /> |
-| **Goal Detail** | <img src="./screenshots/lightTheme/goaldetail6.png" width="250" /> |
-| **Profile Screen** | <img src="./screenshots/lightTheme/profile5.png" width="250" /> |
+<img src="./screenshots/lightTheme/login1.png" width="180" /> <img src="./screenshots/lightTheme/login2.png" width="180" /> <img src="./screenshots/lightTheme/dashboard3.png" width="180" /> <img src="./screenshots/lightTheme/goals4.png" width="180" /> <img src="./screenshots/lightTheme/goaldetail6.png" width="180" /> <img src="./screenshots/lightTheme/profile5.png" width="180" />
+
+*Login Screen | Login Validation | Home Dashboard | Goals List | Goal Detail | Profile Screen*
 
 ### Dark Theme
 
-| Screen | Screenshot |
-|--------|-----------|
-| **Login Screen** | <img src="./screenshots/darkTheme/login1.png" width="250" /> |
-| **Login Screen (Validation)** | <img src="./screenshots/darkTheme/login2.png" width="250" /> |
-| **Home Dashboard** | <img src="./screenshots/darkTheme/dashboard3.png" width="250" /> |
-| **Goals List** | <img src="./screenshots/darkTheme/goals4.png" width="250" /> |
-| **Goal Detail** | <img src="./screenshots/darkTheme/goaldetail5.png" width="250" /> |
-| **Profile Screen** | <img src="./screenshots/darkTheme/profile6.png" width="250" /> |
+<img src="./screenshots/darkTheme/login1.png" width="180" /> <img src="./screenshots/darkTheme/login2.png" width="180" /> <img src="./screenshots/darkTheme/dashboard3.png" width="180" /> <img src="./screenshots/darkTheme/goals4.png" width="180" /> <img src="./screenshots/darkTheme/goaldetail5.png" width="180" /> <img src="./screenshots/darkTheme/profile6.png" width="180" />
+
+*Login Screen | Login Validation | Home Dashboard | Goals List | Goal Detail | Profile Screen*
 
 ### Demo Credentials
 
