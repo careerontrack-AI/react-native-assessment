@@ -23,13 +23,11 @@ CareerOnTrack is a career development application that enables users to set, tra
 
 <img src="./screenshots/lightTheme/login1.png" width="180" /> <img src="./screenshots/lightTheme/login2.png" width="180" /> <img src="./screenshots/lightTheme/dashboard3.png" width="180" /> <img src="./screenshots/lightTheme/goals4.png" width="180" /> <img src="./screenshots/lightTheme/goaldetail6.png" width="180" /> <img src="./screenshots/lightTheme/profile5.png" width="180" />
 
-*Login Screen | Login Validation | Home Dashboard | Goals List | Goal Detail | Profile Screen*
 
 ### Dark Theme
 
 <img src="./screenshots/darkTheme/login1.png" width="180" /> <img src="./screenshots/darkTheme/login2.png" width="180" /> <img src="./screenshots/darkTheme/dashboard3.png" width="180" /> <img src="./screenshots/darkTheme/goals4.png" width="180" /> <img src="./screenshots/darkTheme/goaldetail5.png" width="180" /> <img src="./screenshots/darkTheme/profile6.png" width="180" />
 
-*Login Screen | Login Validation | Home Dashboard | Goals List | Goal Detail | Profile Screen*
 
 ### Demo Credentials
 
