@@ -7,13 +7,15 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
+import { useTheme, useThemeContext } from '../theme/ThemeProvider';
 import { useAuth } from '../context/AuthContext';
 import { userService } from '../services/api';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import Label from '../components/ui/Label';
 import TopBar from '../components/TopBar';
+import { Ionicons } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native';
 
 // TODO: Task 2 - Complete Profile Screen
 // Requirements:
@@ -26,6 +28,7 @@ import TopBar from '../components/TopBar';
 
 export default function ProfileScreen() {
   const theme = useTheme();
+  const { themeMode, setThemeMode } = useThemeContext();
   const { user, logout, updateUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(user?.name || '');
@@ -113,6 +116,45 @@ export default function ProfileScreen() {
     buttonContainer: {
       marginTop: theme.spacing.sm,
     },
+    themeSection: {
+      marginBottom: theme.spacing.xxl,
+    },
+    themeOptionContainer: {
+      flexDirection: 'row',
+      marginTop: theme.spacing.sm,
+      borderRadius: theme.radius.lg,
+      backgroundColor: theme.colors.surfaceAlt,
+      padding: theme.spacing.xs,
+      gap: theme.spacing.xs,
+    },
+    themeOption: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: theme.spacing.sm,
+      paddingHorizontal: theme.spacing.md,
+      borderRadius: theme.radius.md,
+      gap: theme.spacing.xs,
+    },
+    themeOptionActive: {
+      backgroundColor: theme.colors.surface,
+      ...theme.shadows.card,
+    },
+    themeOptionText: {
+      fontSize: theme.typography.size.sm,
+      fontFamily: theme.typography.font.medium,
+      color: theme.colors.textSecondary,
+    },
+    themeOptionTextActive: {
+      color: theme.colors.textPrimary,
+      fontFamily: theme.typography.font.semiBold,
+    },
+    divider: {
+      height: 1,
+      backgroundColor: theme.colors.border,
+      marginVertical: theme.spacing.xxl,
+    },
   });
 
   if (loading && !user) {
@@ -191,6 +233,90 @@ export default function ProfileScreen() {
               style={{ marginBottom: theme.spacing.md }}
             />
           )}
+        </View>
+
+        <View style={styles.divider} />
+
+        {/* Theme Toggle Section */}
+        <View style={styles.themeSection}>
+          <Label>Appearance</Label>
+          <View style={styles.themeOptionContainer}>
+            <TouchableOpacity
+              style={[
+                styles.themeOption,
+                themeMode === 'light' && styles.themeOptionActive,
+              ]}
+              onPress={() => setThemeMode('light')}
+            >
+              <Ionicons
+                name="sunny-outline"
+                size={18}
+                color={
+                  themeMode === 'light'
+                    ? theme.colors.textPrimary
+                    : theme.colors.textSecondary
+                }
+              />
+              <Text
+                style={[
+                  styles.themeOptionText,
+                  themeMode === 'light' && styles.themeOptionTextActive,
+                ]}
+              >
+                Light
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.themeOption,
+                themeMode === 'dark' && styles.themeOptionActive,
+              ]}
+              onPress={() => setThemeMode('dark')}
+            >
+              <Ionicons
+                name="moon-outline"
+                size={18}
+                color={
+                  themeMode === 'dark'
+                    ? theme.colors.textPrimary
+                    : theme.colors.textSecondary
+                }
+              />
+              <Text
+                style={[
+                  styles.themeOptionText,
+                  themeMode === 'dark' && styles.themeOptionTextActive,
+                ]}
+              >
+                Dark
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.themeOption,
+                themeMode === 'system' && styles.themeOptionActive,
+              ]}
+              onPress={() => setThemeMode('system')}
+            >
+              <Ionicons
+                name="phone-portrait-outline"
+                size={18}
+                color={
+                  themeMode === 'system'
+                    ? theme.colors.textPrimary
+                    : theme.colors.textSecondary
+                }
+              />
+              <Text
+                style={[
+                  styles.themeOptionText,
+                  themeMode === 'system' && styles.themeOptionTextActive,
+                ]}
+              >
+                System
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         <Button

@@ -11,7 +11,7 @@ const Label = React.forwardRef<Text, LabelProps>(
   ({ style, disabled, ...props }, ref) => {
     const styles = useThemedStyles(theme => ({
       base: {
-        fontSize: theme.typography.size.sm,
+        fontSize: theme.typography.size.md,
         fontWeight: theme.typography.weight.medium,
         fontFamily: theme.typography.font.medium,
         lineHeight: theme.typography.lineHeight.sm,

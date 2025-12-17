@@ -1,5 +1,6 @@
 
 import { useThemedStyles } from '../../theme/useThemedStyles';
+import { useTheme } from '../../theme/ThemeProvider';
 import React from 'react';
 import { Text, View, ViewStyle, TextStyle } from 'react-native';
 
@@ -16,6 +17,7 @@ const Badge: React.FC<BadgeProps> = ({
   style,
   textStyle,
 }) => {
+  const theme = useTheme();
   const styles = useThemedStyles(theme => ({
     base: {
       paddingHorizontal: 10,
@@ -58,11 +60,13 @@ const Badge: React.FC<BadgeProps> = ({
   const getTextColor = () => {
     switch (variant) {
       case 'outline':
+        return theme.colors.textPrimary;
       case 'owned':
       case 'notOwned':
-        return '#111827'; // Dark text for these variants
+        // Use white text for better contrast on colored backgrounds in both themes
+        return theme.colors.white;
       default:
-        return '#ffffff'; // White text for others
+        return theme.colors.white; // White text for default, secondary, and destructive
     }
   };
 

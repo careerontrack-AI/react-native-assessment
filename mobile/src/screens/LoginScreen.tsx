@@ -113,6 +113,9 @@ export default function LoginScreen() {
     form: {
       width: '100%',
     },
+    label: {
+      marginStart: theme.spacing.md,
+    },
     inputContainer: {
       marginBottom: theme.spacing.xl,
     },
@@ -142,7 +145,7 @@ export default function LoginScreen() {
 
         <View style={styles.form}>
           <View style={styles.inputContainer}>
-            <Label>Email</Label>
+            <Label style  = {styles.label}>Email</Label>
             <Input
               style={errors.email ? { borderColor: theme.colors.error } : undefined}
               placeholder="Enter your email"
@@ -156,7 +159,7 @@ export default function LoginScreen() {
           </View>
 
           <View style={styles.inputContainer}>
-            <Label>Password</Label>
+          <Label style  = {styles.label}>Password</Label>
             <Input
               style={errors.password ? { borderColor: theme.colors.error } : undefined}
               placeholder="Enter your password"
