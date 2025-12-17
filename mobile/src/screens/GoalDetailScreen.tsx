@@ -129,7 +129,7 @@ export default function GoalDetailScreen({ route, navigation }: any) {
       gap: theme.spacing.sm,
     },
     statusButton: {
-      paddingHorizontal: theme.spacing.lg,
+      paddingHorizontal: theme.spacing.md,
       paddingVertical: theme.spacing.sm,
       borderRadius: theme.radius.lg,
       borderWidth: 1,
