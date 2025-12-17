@@ -1,12 +1,12 @@
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import LoginScreen from '../screens/LoginScreen';
-import HomeScreen from '../screens/HomeScreen';
-import GoalsScreen from '../screens/GoalsScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import GoalDetailScreen from '../screens/GoalDetailScreen';
-import { useAuth } from '../context/AuthContext';
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import LoginScreen from "../screens/LoginScreen";
+import HomeScreen from "../screens/HomeScreen";
+import GoalsScreen from "../screens/GoalsScreen";
+import ProfileScreen from "../screens/ProfileScreen";
+import GoalDetailScreen from "../screens/GoalDetailScreen";
+import { useAuth } from "../context/AuthContext";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -28,9 +28,7 @@ function MainTabs() {
 }
 
 export default function AppNavigator() {
-  // TODO: Replace this line with actual auth state
-  // const { isAuthenticated } = useAuth();
-  const isAuthenticated = false; // Remove this line and uncomment the line above
+  const { isAuthenticated } = useAuth();
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -45,4 +43,3 @@ export default function AppNavigator() {
     </Stack.Navigator>
   );
 }
-
