@@ -27,6 +27,7 @@ const Input = React.forwardRef<TextInput, InputProps>(({ style, editable = true,
       backgroundColor: theme.colors.surface,
       paddingHorizontal: theme.spacing.md,
       fontSize: theme.typography.size.md,
+      fontFamily: theme.typography.font.regular,
       color: theme.colors.textPrimary,
     },
     disabled: {

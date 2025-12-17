@@ -109,12 +109,14 @@ export default function GoalDetailScreen({ route, navigation }: any) {
     },
     title: {
       fontSize: theme.typography.size.xl,
-      fontWeight: '700',
+      fontWeight: theme.typography.weight.bold,
+      fontFamily: theme.typography.font.bold,
       marginBottom: theme.spacing.md,
       color: theme.colors.textPrimary,
     },
     description: {
       fontSize: theme.typography.size.md,
+      fontFamily: theme.typography.font.regular,
       color: theme.colors.textSecondary,
       marginBottom: theme.spacing.xxl,
       lineHeight: theme.typography.lineHeight.lg,
@@ -140,7 +142,8 @@ export default function GoalDetailScreen({ route, navigation }: any) {
     },
     statusButtonText: {
       fontSize: theme.typography.size.sm,
-      fontWeight: '600',
+      fontWeight: theme.typography.weight.semiBold,
+      fontFamily: theme.typography.font.semiBold,
       textTransform: 'capitalize',
       color: theme.colors.textSecondary,
     },
@@ -160,7 +163,8 @@ export default function GoalDetailScreen({ route, navigation }: any) {
     },
     progressText: {
       fontSize: theme.typography.size.sm,
-      fontWeight: '600',
+      fontWeight: theme.typography.weight.semiBold,
+      fontFamily: theme.typography.font.semiBold,
       color: theme.colors.primary,
     },
     meta: {
@@ -171,6 +175,7 @@ export default function GoalDetailScreen({ route, navigation }: any) {
     },
     metaText: {
       fontSize: theme.typography.size.xs,
+      fontFamily: theme.typography.font.regular,
       color: theme.colors.textTertiary,
       marginBottom: theme.spacing.xs,
     },
@@ -187,7 +192,7 @@ export default function GoalDetailScreen({ route, navigation }: any) {
   if (!goal) {
     return (
       <View style={styles.centerContainer}>
-        <Text style={{ color: theme.colors.textSecondary }}>Goal not found</Text>
+        <Text style={{ color: theme.colors.textSecondary, fontFamily: theme.typography.font.regular }}>Goal not found</Text>
       </View>
     );
   }

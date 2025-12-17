@@ -62,11 +62,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+    fontFamily: 'Poppins-Bold',
     marginBottom: 12,
     color: '#1a1a1a',
   },
   message: {
     fontSize: 14,
+    fontFamily: 'Poppins-Regular',
     color: '#666',
     textAlign: 'center',
     marginBottom: 24,
@@ -81,6 +83,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+    fontFamily: 'Poppins-SemiBold',
   },
 });
 

@@ -173,7 +173,7 @@ export default function GoalsScreen({ navigation }: any) {
     goalCardRow1: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginBottom: theme.spacing.sm,
+      marginBottom: theme.spacing.xs,
     },
     goalIcon: {
       marginRight: theme.spacing.sm,
@@ -181,6 +181,7 @@ export default function GoalsScreen({ navigation }: any) {
     goalTitle: {
       fontSize: theme.typography.size.md,
       fontWeight: theme.typography.weight.bold,
+      fontFamily: theme.typography.font.bold,
       color: theme.colors.textPrimary,
       flex: 1,
     },
@@ -195,12 +196,13 @@ export default function GoalsScreen({ navigation }: any) {
     progressText: {
       fontSize: theme.typography.size.sm,
       fontWeight: theme.typography.weight.semiBold,
+      fontFamily: theme.typography.font.semiBold,
       color: theme.colors.primary,
     },
     emptyText: {
       fontSize: theme.typography.size.xl,
       fontFamily: theme.typography.font.semiBold,
-      fontWeight: '600',
+      fontWeight: theme.typography.weight.semiBold,
       color: theme.colors.textSecondary,
       marginBottom: theme.spacing.sm,
     },
@@ -250,7 +252,7 @@ export default function GoalsScreen({ navigation }: any) {
     modalTitle: {
       fontSize: theme.typography.size.xl,
       fontFamily: theme.typography.font.bold,
-      fontWeight: '700',
+      fontWeight: theme.typography.weight.bold,
       color: theme.colors.textPrimary,
     },
     modalBody: {

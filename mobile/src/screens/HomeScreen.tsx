@@ -81,12 +81,14 @@ export default function HomeScreen({ navigation }: any) {
     },
     welcome: {
       fontSize: theme.typography.size.xxl,
-      fontWeight: '700',
+      fontWeight: theme.typography.weight.bold,
+      fontFamily: theme.typography.font.bold,
       marginBottom: theme.spacing.sm,
       color: theme.colors.textPrimary,
     },
     subtitle: {
       fontSize: theme.typography.size.md,
+      fontFamily: theme.typography.font.regular,
       color: theme.colors.textSecondary,
       marginBottom: theme.spacing.xxl,
     },
@@ -103,18 +105,21 @@ export default function HomeScreen({ navigation }: any) {
     },
     statValue: {
       fontSize: theme.typography.size.xxl,
-      fontWeight: '700',
+      fontWeight: theme.typography.weight.bold,
+      fontFamily: theme.typography.font.bold,
       color: theme.colors.textPrimary,
       marginBottom: theme.spacing.xs,
     },
     statLabel: {
       fontSize: theme.typography.size.xs,
       color: theme.colors.textSecondary,
-      fontWeight: '600',
+      fontWeight: theme.typography.weight.semiBold,
+      fontFamily: theme.typography.font.semiBold,
     },
     progressTitle: {
       fontSize: theme.typography.size.md,
-      fontWeight: '600',
+      fontWeight: theme.typography.weight.semiBold,
+      fontFamily: theme.typography.font.semiBold,
       marginBottom: theme.spacing.md,
       color: theme.colors.textPrimary,
     },
@@ -140,6 +145,7 @@ export default function HomeScreen({ navigation }: any) {
     goalTitle: {
       fontSize: theme.typography.size.md,
       fontWeight: theme.typography.weight.bold,
+      fontFamily: theme.typography.font.bold,
       color: theme.colors.textPrimary,
       flex: 1,
     },
@@ -154,6 +160,7 @@ export default function HomeScreen({ navigation }: any) {
     progressText: {
       fontSize: theme.typography.size.sm,
       fontWeight: theme.typography.weight.semiBold,
+      fontFamily: theme.typography.font.semiBold,
       color: theme.colors.primary,
     },
     recentSection: {
@@ -167,13 +174,15 @@ export default function HomeScreen({ navigation }: any) {
     },
     sectionTitle: {
       fontSize: theme.typography.size.lg,
-      fontWeight: '600',
+      fontWeight: theme.typography.weight.semiBold,
+      fontFamily: theme.typography.font.semiBold,
       color: theme.colors.textPrimary,
     },
     viewAllText: {
       fontSize: theme.typography.size.sm,
       color: theme.colors.primary,
-      fontWeight: '600',
+      fontWeight: theme.typography.weight.semiBold,
+      fontFamily: theme.typography.font.semiBold,
     },
     emptyContainer: {
       alignItems: 'center',
@@ -181,12 +190,14 @@ export default function HomeScreen({ navigation }: any) {
     },
     emptyText: {
       fontSize: theme.typography.size.xl,
-      fontWeight: '600',
+      fontWeight: theme.typography.weight.semiBold,
+      fontFamily: theme.typography.font.semiBold,
       color: theme.colors.textSecondary,
       marginBottom: theme.spacing.sm,
     },
     emptySubtext: {
       fontSize: theme.typography.size.sm,
+      fontFamily: theme.typography.font.regular,
       color: theme.colors.textTertiary,
     },
   });

@@ -97,6 +97,7 @@ const Button: React.FC<ButtonProps> = ({
         text: {
             fontSize: theme.typography.size.sm,
             fontWeight: theme.typography.weight.medium,
+            fontFamily: theme.typography.font.medium,
         },
         text_default: {
             color: theme.colors.white,

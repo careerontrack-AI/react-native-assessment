@@ -52,7 +52,7 @@ const TopBar: React.FC<TopBarProps> = ({
       alignItems: 'center',
     },
     backIcon: {
-      color: theme.colors.primary,
+      color: theme.colors.textPrimary,
     },
     titleContainer: {
       flex: 1,
@@ -61,11 +61,13 @@ const TopBar: React.FC<TopBarProps> = ({
     title: {
       fontSize: theme.typography.size.xl,
       fontWeight: theme.typography.weight.bold,
+      fontFamily: theme.typography.font.bold,
       color: theme.colors.textPrimary,
       lineHeight: theme.typography.lineHeight.lg,
       // Platform-specific title styling
       ...(Platform.OS === 'ios' && {
         fontWeight: theme.typography.weight.semiBold,
+        fontFamily: theme.typography.font.semiBold,
       }),
       ...(Platform.OS === 'android' && {
         fontSize: theme.typography.size.lg,

@@ -97,13 +97,15 @@ export default function LoginScreen() {
     },
     title: {
       fontSize: theme.typography.size.xxl,
-      fontWeight: '700',
+      fontWeight: theme.typography.weight.bold,
+      fontFamily: theme.typography.font.bold,
       textAlign: 'center',
       marginBottom: theme.spacing.sm,
       color: theme.colors.textPrimary,
     },
     subtitle: {
       fontSize: theme.typography.size.md,
+      fontFamily: theme.typography.font.regular,
       textAlign: 'center',
       marginBottom: theme.spacing.xxxl,
       color: theme.colors.textSecondary,
@@ -117,6 +119,7 @@ export default function LoginScreen() {
     errorText: {
       color: theme.colors.error,
       fontSize: theme.typography.size.xs,
+      fontFamily: theme.typography.font.regular,
       marginTop: theme.spacing.xs,
     },
     demoText: {
@@ -124,6 +127,7 @@ export default function LoginScreen() {
       marginTop: theme.spacing.xl,
       color: theme.colors.textTertiary,
       fontSize: theme.typography.size.xs,
+      fontFamily: theme.typography.font.regular,
     },
   });
 

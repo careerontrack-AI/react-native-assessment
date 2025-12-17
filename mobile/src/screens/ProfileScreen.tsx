@@ -97,7 +97,8 @@ export default function ProfileScreen() {
     },
     title: {
       fontSize: theme.typography.size.xxl,
-      fontWeight: '700',
+      fontWeight: theme.typography.weight.bold,
+      fontFamily: theme.typography.font.bold,
       marginBottom: theme.spacing.xxl,
       color: theme.colors.textPrimary,
     },
@@ -106,6 +107,7 @@ export default function ProfileScreen() {
     },
     value: {
       fontSize: theme.typography.size.md,
+      fontFamily: theme.typography.font.regular,
       color: theme.colors.textPrimary,
     },
     buttonContainer: {

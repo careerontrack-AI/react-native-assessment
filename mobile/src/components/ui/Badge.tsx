@@ -27,6 +27,7 @@ const Badge: React.FC<BadgeProps> = ({
     text: {
       fontSize: theme.typography.size.xs,
       fontWeight: theme.typography.weight.medium,
+      fontFamily: theme.typography.font.medium,
     },
     default: {
       backgroundColor: theme.colors.primary,

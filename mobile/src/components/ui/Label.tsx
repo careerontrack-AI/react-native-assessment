@@ -13,6 +13,7 @@ const Label = React.forwardRef<Text, LabelProps>(
       base: {
         fontSize: theme.typography.size.sm,
         fontWeight: theme.typography.weight.medium,
+        fontFamily: theme.typography.font.medium,
         lineHeight: theme.typography.lineHeight.sm,
         color: theme.colors.textPrimary,
       },
