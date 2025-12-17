@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import { useTheme } from '../theme/ThemeProvider';
 import { useAuth } from '../context/AuthContext';
 import { userService } from '../services/api';
 
@@ -22,6 +23,7 @@ import { userService } from '../services/api';
 // 6. Update local auth context after profile update
 
 export default function ProfileScreen() {
+  const theme = useTheme();
   const { user, logout, updateUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(user?.name || '');
@@ -77,10 +79,90 @@ export default function ProfileScreen() {
     );
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.surface,
+    },
+    centerContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+    },
+    content: {
+      padding: theme.spacing.xl,
+    },
+    title: {
+      fontSize: theme.typography.size.xxl,
+      fontFamily: theme.typography.font.bold,
+      fontWeight: '700',
+      marginBottom: theme.spacing.xxl,
+      color: theme.colors.textPrimary,
+    },
+    section: {
+      marginBottom: theme.spacing.xxl,
+    },
+    label: {
+      fontSize: theme.typography.size.sm,
+      fontFamily: theme.typography.font.medium,
+      fontWeight: '600',
+      marginBottom: theme.spacing.sm,
+      color: theme.colors.textSecondary,
+    },
+    value: {
+      fontSize: theme.typography.size.md,
+      fontFamily: theme.typography.font.regular,
+      color: theme.colors.textPrimary,
+    },
+    input: {
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      borderRadius: theme.radius.lg,
+      padding: theme.spacing.md,
+      fontSize: theme.typography.size.md,
+      fontFamily: theme.typography.font.regular,
+      backgroundColor: theme.colors.surfaceAlt,
+      color: theme.colors.textPrimary,
+    },
+    buttonContainer: {
+      marginTop: theme.spacing.sm,
+    },
+    button: {
+      borderRadius: theme.radius.lg,
+      padding: theme.spacing.lg,
+      alignItems: 'center',
+      marginBottom: theme.spacing.md,
+      ...theme.shadows.card,
+    },
+    editButton: {
+      backgroundColor: theme.colors.primary,
+    },
+    saveButton: {
+      backgroundColor: theme.colors.success,
+    },
+    cancelButton: {
+      backgroundColor: theme.colors.textTertiary,
+    },
+    logoutButton: {
+      backgroundColor: theme.colors.error,
+      marginTop: theme.spacing.xl,
+    },
+    buttonText: {
+      color: theme.colors.white,
+      fontSize: theme.typography.size.md,
+      fontFamily: theme.typography.font.semiBold,
+      fontWeight: '600',
+    },
+    logoutButtonText: {
+      color: theme.colors.white,
+    },
+  });
+
   if (loading && !user) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="large" color={theme.colors.primary} />
       </View>
     );
   }
@@ -98,6 +180,7 @@ export default function ProfileScreen() {
               value={name}
               onChangeText={setName}
               placeholder="Enter your name"
+              placeholderTextColor={theme.colors.textTertiary}
             />
           ) : (
             <Text style={styles.value}>{name}</Text>
@@ -112,6 +195,7 @@ export default function ProfileScreen() {
               value={email}
               onChangeText={setEmail}
               placeholder="Enter your email"
+              placeholderTextColor={theme.colors.textTertiary}
               keyboardType="email-address"
               autoCapitalize="none"
             />
@@ -129,7 +213,7 @@ export default function ProfileScreen() {
                 disabled={loading}
               >
                 {loading ? (
-                  <ActivityIndicator color="#fff" />
+                  <ActivityIndicator color={theme.colors.white} />
                 ) : (
                   <Text style={styles.buttonText}>Save</Text>
                 )}
@@ -166,76 +250,4 @@ export default function ProfileScreen() {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  centerContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  content: {
-    padding: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 24,
-    color: '#1a1a1a',
-  },
-  section: {
-    marginBottom: 24,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 8,
-    color: '#666',
-  },
-  value: {
-    fontSize: 16,
-    color: '#1a1a1a',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    backgroundColor: '#f9f9f9',
-  },
-  buttonContainer: {
-    marginTop: 8,
-  },
-  button: {
-    borderRadius: 8,
-    padding: 16,
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  editButton: {
-    backgroundColor: '#007AFF',
-  },
-  saveButton: {
-    backgroundColor: '#34C759',
-  },
-  cancelButton: {
-    backgroundColor: '#8E8E93',
-  },
-  logoutButton: {
-    backgroundColor: '#ff4444',
-    marginTop: 20,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  logoutButtonText: {
-    color: '#fff',
-  },
-});
 

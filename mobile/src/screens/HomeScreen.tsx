@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity
 import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../theme/ThemeProvider';
 import { goalService } from '../services/api';
 
 interface Goal {
@@ -17,6 +18,7 @@ interface Goal {
 
 export default function HomeScreen({ navigation }: any) {
   const { user } = useAuth();
+  const theme = useTheme();
   const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -54,10 +56,191 @@ export default function HomeScreen({ navigation }: any) {
     new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
   ).slice(0, 3);
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    centerContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: theme.colors.background,
+    },
+    content: {
+      padding: theme.spacing.xl,
+    },
+    welcome: {
+      fontSize: theme.typography.size.xxl,
+      fontFamily: theme.typography.font.bold,
+      fontWeight: '700',
+      marginBottom: theme.spacing.sm,
+      color: theme.colors.textPrimary,
+    },
+    subtitle: {
+      fontSize: theme.typography.size.md,
+      fontFamily: theme.typography.font.regular,
+      color: theme.colors.textSecondary,
+      marginBottom: theme.spacing.xxl,
+    },
+    statsContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: theme.spacing.lg,
+    },
+    statCard: {
+      flex: 1,
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.radius.lg,
+      padding: theme.spacing.lg,
+      marginHorizontal: theme.spacing.xs,
+      alignItems: 'center',
+      ...theme.shadows.card,
+    },
+    statIcon: {
+      marginBottom: theme.spacing.sm,
+    },
+    statCardPrimary: {
+      backgroundColor: theme.colors.surfacePrimary,
+    },
+    statCardSuccess: {
+      backgroundColor: theme.colors.successLight,
+    },
+    statValue: {
+      fontSize: theme.typography.size.xxl,
+      fontFamily: theme.typography.font.bold,
+      fontWeight: '700',
+      color: theme.colors.textPrimary,
+      marginBottom: theme.spacing.xs,
+    },
+    statLabel: {
+      fontSize: theme.typography.size.xs,
+      fontFamily: theme.typography.font.medium,
+      color: theme.colors.textSecondary,
+      fontWeight: '600',
+    },
+    progressCard: {
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.radius.lg,
+      padding: theme.spacing.lg,
+      marginBottom: theme.spacing.xxl,
+      ...theme.shadows.card,
+    },
+    progressTitle: {
+      fontSize: theme.typography.size.md,
+      fontFamily: theme.typography.font.semiBold,
+      fontWeight: '600',
+      marginBottom: theme.spacing.md,
+      color: theme.colors.textPrimary,
+    },
+    progressBarContainer: {
+      height: 8,
+      backgroundColor: theme.colors.divider,
+      borderRadius: theme.radius.sm,
+      overflow: 'hidden',
+      marginBottom: theme.spacing.sm,
+    },
+    progressBar: {
+      height: '100%',
+      backgroundColor: theme.colors.primary,
+    },
+    progressText: {
+      fontSize: theme.typography.size.sm,
+      fontFamily: theme.typography.font.semiBold,
+      fontWeight: '600',
+      color: theme.colors.primary,
+    },
+    recentSection: {
+      marginTop: theme.spacing.sm,
+    },
+    sectionHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: theme.spacing.md,
+    },
+    sectionTitle: {
+      fontSize: theme.typography.size.lg,
+      fontFamily: theme.typography.font.semiBold,
+      fontWeight: '600',
+      color: theme.colors.textPrimary,
+    },
+    viewAllText: {
+      fontSize: theme.typography.size.sm,
+      fontFamily: theme.typography.font.semiBold,
+      color: theme.colors.primary,
+      fontWeight: '600',
+    },
+    goalCard: {
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.radius.lg,
+      padding: theme.spacing.lg,
+      marginBottom: theme.spacing.md,
+      ...theme.shadows.card,
+    },
+    goalHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: theme.spacing.sm,
+    },
+    goalIcon: {
+      marginRight: theme.spacing.sm,
+    },
+    goalTitle: {
+      fontSize: theme.typography.size.md,
+      fontFamily: theme.typography.font.semiBold,
+      fontWeight: '600',
+      flex: 1,
+      color: theme.colors.textPrimary,
+    },
+    goalFooter: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    statusBadge: {
+      fontSize: theme.typography.size.xs,
+      fontFamily: theme.typography.font.semiBold,
+      fontWeight: '600',
+      textTransform: 'capitalize',
+      paddingHorizontal: theme.spacing.sm,
+      paddingVertical: theme.spacing.xs,
+      borderRadius: theme.radius.md,
+    },
+    statusin_progress: {
+      backgroundColor: theme.colors.warningLight,
+      color: theme.colors.warningDark,
+    },
+    statuscompleted: {
+      backgroundColor: theme.colors.successLight,
+      color: theme.colors.success,
+    },
+    statusnot_started: {
+      backgroundColor: theme.colors.divider,
+      color: theme.colors.textSecondary,
+    },
+    emptyContainer: {
+      alignItems: 'center',
+      paddingVertical: theme.spacing.xxxl,
+    },
+    emptyText: {
+      fontSize: theme.typography.size.xl,
+      fontFamily: theme.typography.font.semiBold,
+      fontWeight: '600',
+      color: theme.colors.textSecondary,
+      marginBottom: theme.spacing.sm,
+    },
+    emptySubtext: {
+      fontSize: theme.typography.size.sm,
+      fontFamily: theme.typography.font.regular,
+      color: theme.colors.textTertiary,
+    },
+  });
+
   if (loading) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="large" color={theme.colors.primary} />
       </View>
     );
   }
@@ -71,17 +254,17 @@ export default function HomeScreen({ navigation }: any) {
         {/* Statistics Cards */}
         <View style={styles.statsContainer}>
           <View style={styles.statCard}>
-            <Ionicons name="flag" size={28} color="#007AFF" style={styles.statIcon} />
+            <Ionicons name="flag" size={28} color={theme.colors.primary} style={styles.statIcon} />
             <Text style={styles.statValue}>{totalGoals}</Text>
             <Text style={styles.statLabel}>Total Goals</Text>
           </View>
           <View style={[styles.statCard, styles.statCardPrimary]}>
-            <Ionicons name="hourglass" size={28} color="#2196F3" style={styles.statIcon} />
+            <Ionicons name="hourglass" size={28} color={theme.colors.primary} style={styles.statIcon} />
             <Text style={styles.statValue}>{inProgressGoals}</Text>
             <Text style={styles.statLabel}>In Progress</Text>
           </View>
           <View style={[styles.statCard, styles.statCardSuccess]}>
-            <Ionicons name="checkmark-circle" size={28} color="#4CAF50" style={styles.statIcon} />
+            <Ionicons name="checkmark-circle" size={28} color={theme.colors.success} style={styles.statIcon} />
             <Text style={styles.statValue}>{completedGoals}</Text>
             <Text style={styles.statLabel}>Completed</Text>
           </View>
@@ -114,15 +297,15 @@ export default function HomeScreen({ navigation }: any) {
               if (goal.progress === 100) {
                 displayStatus = 'completed';
                 iconName = 'checkmark-circle-outline';
-                iconColor = '#4CAF50';
+                iconColor = theme.colors.success;
               } else if (goal.progress > 0 && goal.progress < 100) {
                 displayStatus = 'in_progress';
                 iconName = 'refresh-outline';
-                iconColor = '#FF9800';
+                iconColor = theme.colors.warning;
               } else {
                 displayStatus = 'not_started';
                 iconName = 'flag-outline';
-                iconColor = '#9E9E9E';
+                iconColor = theme.colors.textTertiary;
               }
 
               return (
@@ -157,184 +340,4 @@ export default function HomeScreen({ navigation }: any) {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  centerContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  content: {
-    padding: 20,
-  },
-  welcome: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    color: '#1a1a1a',
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 24,
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 16,
-  },
-  statCard: {
-    flex: 1,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginHorizontal: 4,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  statIcon: {
-    marginBottom: 8,
-  },
-  statCardPrimary: {
-    backgroundColor: '#E3F2FD',
-  },
-  statCardSuccess: {
-    backgroundColor: '#E8F5E9',
-  },
-  statValue: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#1a1a1a',
-    marginBottom: 4,
-  },
-  statLabel: {
-    fontSize: 12,
-    color: '#666',
-    fontWeight: '600',
-  },
-  progressCard: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  progressTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 12,
-    color: '#1a1a1a',
-  },
-  progressBarContainer: {
-    height: 8,
-    backgroundColor: '#e0e0e0',
-    borderRadius: 4,
-    overflow: 'hidden',
-    marginBottom: 8,
-  },
-  progressBar: {
-    height: '100%',
-    backgroundColor: '#007AFF',
-  },
-  progressText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#007AFF',
-  },
-  recentSection: {
-    marginTop: 8,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1a1a1a',
-  },
-  viewAllText: {
-    fontSize: 14,
-    color: '#007AFF',
-    fontWeight: '600',
-  },
-  goalCard: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  goalHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  goalIcon: {
-    marginRight: 8,
-  },
-  goalTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    flex: 1,
-    color: '#1a1a1a',
-  },
-  goalFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  statusBadge: {
-    fontSize: 12,
-    fontWeight: '600',
-    textTransform: 'capitalize',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
-  },
-  statusin_progress: {
-    backgroundColor: '#FFF3CD',
-    color: '#856404',
-  },
-  statuscompleted: {
-    backgroundColor: '#D4EDDA',
-    color: '#155724',
-  },
-  statusnot_started: {
-    backgroundColor: '#E0E0E0',
-    color: '#424242',
-  },
-  emptyContainer: {
-    alignItems: 'center',
-    paddingVertical: 40,
-  },
-  emptyText: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#666',
-    marginBottom: 8,
-  },
-  emptySubtext: {
-    fontSize: 14,
-    color: '#999',
-  },
-});
 

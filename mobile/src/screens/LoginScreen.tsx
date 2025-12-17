@@ -11,9 +11,10 @@ import {
   Platform,
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
-
+import { useTheme } from '../theme/ThemeProvider';
 
 export default function LoginScreen() {
+  const theme = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -55,6 +56,89 @@ export default function LoginScreen() {
     }
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.surface,
+    },
+    content: {
+      flex: 1,
+      justifyContent: 'center',
+      padding: theme.spacing.xl,
+    },
+    title: {
+      fontSize: theme.typography.size.xxl,
+      fontFamily: theme.typography.font.bold,
+      fontWeight: '700',
+      textAlign: 'center',
+      marginBottom: theme.spacing.sm,
+      color: theme.colors.textPrimary,
+    },
+    subtitle: {
+      fontSize: theme.typography.size.md,
+      fontFamily: theme.typography.font.regular,
+      textAlign: 'center',
+      marginBottom: theme.spacing.xxxl,
+      color: theme.colors.textSecondary,
+    },
+    form: {
+      width: '100%',
+    },
+    inputContainer: {
+      marginBottom: theme.spacing.xl,
+    },
+    label: {
+      fontSize: theme.typography.size.sm,
+      fontFamily: theme.typography.font.medium,
+      fontWeight: '600',
+      marginBottom: theme.spacing.sm,
+      color: theme.colors.textSecondary,
+    },
+    input: {
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      borderRadius: theme.radius.lg,
+      padding: theme.spacing.md,
+      fontSize: theme.typography.size.md,
+      fontFamily: theme.typography.font.regular,
+      backgroundColor: theme.colors.surfaceAlt,
+      color: theme.colors.textPrimary,
+    },
+    inputError: {
+      borderColor: theme.colors.error,
+    },
+    errorText: {
+      color: theme.colors.error,
+      fontSize: theme.typography.size.xs,
+      fontFamily: theme.typography.font.regular,
+      marginTop: theme.spacing.xs,
+    },
+    button: {
+      backgroundColor: theme.colors.primary,
+      borderRadius: theme.radius.lg,
+      padding: theme.spacing.lg,
+      alignItems: 'center',
+      marginTop: theme.spacing.md,
+      ...theme.shadows.card,
+    },
+    buttonDisabled: {
+      opacity: 0.6,
+    },
+    buttonText: {
+      color: theme.colors.white,
+      fontSize: theme.typography.size.md,
+      fontFamily: theme.typography.font.semiBold,
+      fontWeight: '600',
+    },
+    demoText: {
+      textAlign: 'center',
+      marginTop: theme.spacing.xl,
+      color: theme.colors.textTertiary,
+      fontSize: theme.typography.size.xs,
+      fontFamily: theme.typography.font.regular,
+    },
+  });
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -70,6 +154,7 @@ export default function LoginScreen() {
             <TextInput
               style={[styles.input, errors.email && styles.inputError]}
               placeholder="Enter your email"
+              placeholderTextColor={theme.colors.textTertiary}
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -84,6 +169,7 @@ export default function LoginScreen() {
             <TextInput
               style={[styles.input, errors.password && styles.inputError]}
               placeholder="Enter your password"
+              placeholderTextColor={theme.colors.textTertiary}
               value={password}
               onChangeText={setPassword}
               secureTextEntry
@@ -98,7 +184,7 @@ export default function LoginScreen() {
             disabled={loading}
           >
             {loading ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator color={theme.colors.white} />
             ) : (
               <Text style={styles.buttonText}>Sign In</Text>
             )}
@@ -112,78 +198,4 @@ export default function LoginScreen() {
     </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 8,
-    color: '#1a1a1a',
-  },
-  subtitle: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 40,
-    color: '#666',
-  },
-  form: {
-    width: '100%',
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 8,
-    color: '#333',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    backgroundColor: '#f9f9f9',
-  },
-  inputError: {
-    borderColor: '#ff4444',
-  },
-  errorText: {
-    color: '#ff4444',
-    fontSize: 12,
-    marginTop: 4,
-  },
-  button: {
-    backgroundColor: '#007AFF',
-    borderRadius: 8,
-    padding: 16,
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  buttonDisabled: {
-    opacity: 0.6,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  demoText: {
-    textAlign: 'center',
-    marginTop: 20,
-    color: '#999',
-    fontSize: 12,
-  },
-});
 

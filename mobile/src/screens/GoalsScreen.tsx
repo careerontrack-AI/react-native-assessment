@@ -15,6 +15,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../theme/ThemeProvider';
 import { goalService } from '../services/api';
 
 interface Goal {
@@ -28,6 +29,7 @@ interface Goal {
 }
 
 export default function GoalsScreen({ navigation }: any) {
+  const theme = useTheme();
   const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -112,10 +114,191 @@ export default function GoalsScreen({ navigation }: any) {
     </TouchableOpacity>
   );
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    centerContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: theme.spacing.xl,
+    },
+    list: {
+      padding: theme.spacing.lg,
+    },
+    goalCard: {
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.radius.lg,
+      padding: theme.spacing.lg,
+      marginBottom: theme.spacing.md,
+      ...theme.shadows.card,
+    },
+    goalTitle: {
+      fontSize: theme.typography.size.lg,
+      fontFamily: theme.typography.font.semiBold,
+      fontWeight: '600',
+      marginBottom: theme.spacing.sm,
+      color: theme.colors.textPrimary,
+    },
+    goalDescription: {
+      fontSize: theme.typography.size.sm,
+      fontFamily: theme.typography.font.regular,
+      color: theme.colors.textSecondary,
+      marginBottom: theme.spacing.md,
+    },
+    goalFooter: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    statusBadge: {
+      paddingHorizontal: theme.spacing.md,
+      paddingVertical: theme.spacing.xs,
+      borderRadius: theme.radius.pill,
+    },
+    statusnot_started: {
+      backgroundColor: theme.colors.divider,
+    },
+    statusin_progress: {
+      backgroundColor: theme.colors.warningLight,
+    },
+    statuscompleted: {
+      backgroundColor: theme.colors.successLight,
+    },
+    statusText: {
+      fontSize: theme.typography.size.xs,
+      fontFamily: theme.typography.font.semiBold,
+      fontWeight: '600',
+      textTransform: 'capitalize',
+      color: theme.colors.textSecondary,
+    },
+    progressText: {
+      fontSize: theme.typography.size.sm,
+      fontFamily: theme.typography.font.semiBold,
+      fontWeight: '600',
+      color: theme.colors.primary,
+    },
+    emptyText: {
+      fontSize: theme.typography.size.xl,
+      fontFamily: theme.typography.font.semiBold,
+      fontWeight: '600',
+      color: theme.colors.textSecondary,
+      marginBottom: theme.spacing.sm,
+    },
+    emptySubtext: {
+      fontSize: theme.typography.size.sm,
+      fontFamily: theme.typography.font.regular,
+      color: theme.colors.textTertiary,
+    },
+    fab: {
+      position: 'absolute',
+      right: theme.spacing.xl,
+      bottom: theme.spacing.xl,
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+      backgroundColor: theme.colors.primary,
+      justifyContent: 'center',
+      alignItems: 'center',
+      ...theme.shadows.floating,
+    },
+    modalOverlay: {
+      flex: 1,
+      justifyContent: 'flex-end',
+    },
+    modalBackdrop: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContentContainer: {
+      justifyContent: 'flex-end',
+    },
+    modalContent: {
+      backgroundColor: theme.colors.surface,
+      borderTopLeftRadius: theme.radius.xl,
+      borderTopRightRadius: theme.radius.xl,
+      maxHeight: '80%',
+      paddingBottom: Platform.OS === 'ios' ? 34 : theme.spacing.xl,
+    },
+    modalHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: theme.spacing.xl,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.colors.border,
+    },
+    modalTitle: {
+      fontSize: theme.typography.size.xl,
+      fontFamily: theme.typography.font.bold,
+      fontWeight: '700',
+      color: theme.colors.textPrimary,
+    },
+    modalBody: {
+      padding: theme.spacing.xl,
+    },
+    inputContainer: {
+      marginBottom: theme.spacing.xl,
+    },
+    label: {
+      fontSize: theme.typography.size.sm,
+      fontFamily: theme.typography.font.medium,
+      fontWeight: '600',
+      marginBottom: theme.spacing.sm,
+      color: theme.colors.textSecondary,
+    },
+    input: {
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      borderRadius: theme.radius.lg,
+      padding: theme.spacing.md,
+      fontSize: theme.typography.size.md,
+      fontFamily: theme.typography.font.regular,
+      backgroundColor: theme.colors.surfaceAlt,
+      color: theme.colors.textPrimary,
+    },
+    textArea: {
+      height: 100,
+      paddingTop: theme.spacing.md,
+    },
+    modalFooter: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      padding: theme.spacing.xl,
+      paddingTop: theme.spacing.md,
+      gap: theme.spacing.md,
+    },
+    button: {
+      flex: 1,
+      padding: theme.spacing.md,
+      borderRadius: theme.radius.lg,
+      alignItems: 'center',
+      justifyContent: 'center',
+      ...theme.shadows.card,
+    },
+    cancelButton: {
+      backgroundColor: theme.colors.surfaceAlt,
+    },
+    addButton: {
+      backgroundColor: theme.colors.primary,
+    },
+    buttonDisabled: {
+      opacity: 0.6,
+    },
+    buttonText: {
+      fontSize: theme.typography.size.md,
+      fontFamily: theme.typography.font.semiBold,
+      fontWeight: '600',
+      color: theme.colors.white,
+    },
+  });
+
   if (loading && goals.length === 0) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="large" color={theme.colors.primary} />
       </View>
     );
   }
@@ -131,7 +314,7 @@ export default function GoalsScreen({ navigation }: any) {
           style={styles.fab}
           onPress={() => setModalVisible(true)}
         >
-          <Ionicons name="add" size={28} color="#fff" />
+          <Ionicons name="add" size={28} color={theme.colors.white} />
         </TouchableOpacity>
         <Modal
           visible={modalVisible}
@@ -153,7 +336,7 @@ export default function GoalsScreen({ navigation }: any) {
                 <View style={styles.modalHeader}>
                   <Text style={styles.modalTitle}>Add New Goal</Text>
                   <TouchableOpacity onPress={handleCloseModal}>
-                    <Ionicons name="close" size={24} color="#666" />
+                    <Ionicons name="close" size={24} color={theme.colors.textSecondary} />
                   </TouchableOpacity>
                 </View>
 
@@ -163,6 +346,7 @@ export default function GoalsScreen({ navigation }: any) {
                     <TextInput
                       style={styles.input}
                       placeholder="Enter goal title"
+                      placeholderTextColor={theme.colors.textTertiary}
                       value={newGoalTitle}
                       onChangeText={setNewGoalTitle}
                       autoFocus
@@ -174,6 +358,7 @@ export default function GoalsScreen({ navigation }: any) {
                     <TextInput
                       style={[styles.input, styles.textArea]}
                       placeholder="Enter goal description (optional)"
+                      placeholderTextColor={theme.colors.textTertiary}
                       value={newGoalDescription}
                       onChangeText={setNewGoalDescription}
                       multiline
@@ -189,7 +374,7 @@ export default function GoalsScreen({ navigation }: any) {
                     onPress={handleCloseModal}
                     disabled={addingGoal}
                   >
-                    <Text style={styles.buttonText}>Cancel</Text>
+                    <Text style={[styles.buttonText, { color: theme.colors.textSecondary }]}>Cancel</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[styles.button, styles.addButton, addingGoal && styles.buttonDisabled]}
@@ -197,7 +382,7 @@ export default function GoalsScreen({ navigation }: any) {
                     disabled={addingGoal}
                   >
                     {addingGoal ? (
-                      <ActivityIndicator color="#fff" />
+                      <ActivityIndicator color={theme.colors.white} />
                     ) : (
                       <Text style={styles.buttonText}>Add Goal</Text>
                     )}
@@ -288,7 +473,7 @@ export default function GoalsScreen({ navigation }: any) {
                   onPress={handleCloseModal}
                   disabled={addingGoal}
                 >
-                  <Text style={styles.buttonText}>Cancel</Text>
+                  <Text style={[styles.buttonText, { color: theme.colors.textSecondary }]}>Cancel</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.button, styles.addButton, addingGoal && styles.buttonDisabled]}
@@ -309,180 +494,4 @@ export default function GoalsScreen({ navigation }: any) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  centerContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  list: {
-    padding: 16,
-  },
-  goalCard: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  goalTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 8,
-    color: '#1a1a1a',
-  },
-  goalDescription: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 12,
-  },
-  goalFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  statusBadge: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  statusnot_started: {
-    backgroundColor: '#e0e0e0',
-  },
-  statusin_progress: {
-    backgroundColor: '#fff3cd',
-  },
-  statuscompleted: {
-    backgroundColor: '#d4edda',
-  },
-  statusText: {
-    fontSize: 12,
-    fontWeight: '600',
-    textTransform: 'capitalize',
-  },
-  progressText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#007AFF',
-  },
-  emptyText: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#666',
-    marginBottom: 8,
-  },
-  emptySubtext: {
-    fontSize: 14,
-    color: '#999',
-  },
-  fab: {
-    position: 'absolute',
-    right: 20,
-    bottom: 20,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#007AFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  modalBackdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContentContainer: {
-    justifyContent: 'flex-end',
-  },
-  modalContent: {
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    maxHeight: '80%',
-    paddingBottom: Platform.OS === 'ios' ? 34 : 20,
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#1a1a1a',
-  },
-  modalBody: {
-    padding: 20,
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 8,
-    color: '#333',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    backgroundColor: '#f9f9f9',
-  },
-  textArea: {
-    height: 100,
-    paddingTop: 12,
-  },
-  modalFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 20,
-    paddingTop: 10,
-    gap: 12,
-  },
-  button: {
-    flex: 1,
-    borderRadius: 8,
-    padding: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  cancelButton: {
-    backgroundColor: '#e0e0e0',
-  },
-  addButton: {
-    backgroundColor: '#007AFF',
-  },
-  buttonDisabled: {
-    opacity: 0.6,
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#fff',
-  },
-});
 
