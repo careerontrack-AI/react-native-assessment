@@ -19,22 +19,33 @@ CareerOnTrack is a career development application that enables users to set, tra
 
 ## Screenshots & Demo
 
-> **Note**: Screenshots should be added here showing:
-> * Login screen
-> * Home dashboard with statistics
-> * Goals list with status badges
-> * Goal creation modal
-> * Profile screen with theme toggle
-> * Dark mode examples
-> 
-> 
+### Light Theme
+
+| Screen | Screenshot |
+|--------|-----------|
+| **Login Screen** | <img src="./screenshots/lightTheme/login1.png" width="250" /> |
+| **Login Screen (Validation)** | <img src="./screenshots/lightTheme/login2.png" width="250" /> |
+| **Home Dashboard** | <img src="./screenshots/lightTheme/dashboard3.png" width="250" /> |
+| **Goals List** | <img src="./screenshots/lightTheme/goals4.png" width="250" /> |
+| **Goal Detail** | <img src="./screenshots/lightTheme/goaldetail6.png" width="250" /> |
+| **Profile Screen** | <img src="./screenshots/lightTheme/profile5.png" width="250" /> |
+
+### Dark Theme
+
+| Screen | Screenshot |
+|--------|-----------|
+| **Login Screen** | <img src="./screenshots/darkTheme/login1.png" width="250" /> |
+| **Login Screen (Validation)** | <img src="./screenshots/darkTheme/login2.png" width="250" /> |
+| **Home Dashboard** | <img src="./screenshots/darkTheme/dashboard3.png" width="250" /> |
+| **Goals List** | <img src="./screenshots/darkTheme/goals4.png" width="250" /> |
+| **Goal Detail** | <img src="./screenshots/darkTheme/goaldetail5.png" width="250" /> |
+| **Profile Screen** | <img src="./screenshots/darkTheme/profile6.png" width="250" /> |
 
 ### Demo Credentials
 
-```text
+```
 Email: demo@careerontrack.ai
 Password: demo123
-
 ```
 
 ---
