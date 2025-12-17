@@ -12,14 +12,6 @@ import {
 } from "react-native";
 import { useAuth } from "../context/AuthContext";
 
-// TODO: Task 1 - Complete Login Screen
-// The UI is already set up! You just need to:
-// 1. Call login() from useAuth() hook when button is pressed
-// 2. Show loading state (use the loading state variable)
-// 3. Show error message if login fails (use Alert.alert)
-//
-// Hint: The form validation is already done, just implement handleLogin function!
-
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

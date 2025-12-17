@@ -11,12 +11,6 @@ import { useAuth } from "../context/AuthContext";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// TODO: Task 3 - Complete Navigation
-// The navigation structure is already set up! You just need to:
-// 1. Get isAuthenticated from useAuth() hook
-// 2. Replace the hardcoded false with the actual auth state
-// That's it! The navigation will automatically show Login or Main screens based on auth state.
-
 function MainTabs() {
   return (
     <Tab.Navigator>
