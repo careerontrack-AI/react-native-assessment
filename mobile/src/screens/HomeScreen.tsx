@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
 import { goalService } from '../services/api';
@@ -22,6 +23,13 @@ export default function HomeScreen({ navigation }: any) {
   useEffect(() => {
     loadGoals();
   }, []);
+
+  // Reload goals when screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      loadGoals();
+    }, [])
+  );
 
   const loadGoals = async () => {
     try {
