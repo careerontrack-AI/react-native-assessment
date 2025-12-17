@@ -5,6 +5,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../theme/ThemeProvider';
 import { goalService } from '../services/api';
+import { CardBase, PressableCard } from '../components/ui/Card';
+import Badge from '../components/ui/Badge';
+import TopBar from '../components/TopBar';
 
 interface Goal {
   id: number;
@@ -56,6 +59,12 @@ export default function HomeScreen({ navigation }: any) {
     new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
   ).slice(0, 3);
 
+  const getBadgeVariant = (status: string): 'owned' | 'notOwned' | 'outline' => {
+    if (status === 'completed') return 'owned';
+    if (status === 'in_progress') return 'notOwned';
+    return 'outline';
+  };
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -72,14 +81,12 @@ export default function HomeScreen({ navigation }: any) {
     },
     welcome: {
       fontSize: theme.typography.size.xxl,
-      fontFamily: theme.typography.font.bold,
       fontWeight: '700',
       marginBottom: theme.spacing.sm,
       color: theme.colors.textPrimary,
     },
     subtitle: {
       fontSize: theme.typography.size.md,
-      fontFamily: theme.typography.font.regular,
       color: theme.colors.textSecondary,
       marginBottom: theme.spacing.xxl,
     },
@@ -88,47 +95,25 @@ export default function HomeScreen({ navigation }: any) {
       justifyContent: 'space-between',
       marginBottom: theme.spacing.lg,
     },
-    statCard: {
-      flex: 1,
-      backgroundColor: theme.colors.surface,
-      borderRadius: theme.radius.lg,
+    statCardBase: {
       padding: theme.spacing.lg,
-      marginHorizontal: theme.spacing.xs,
-      alignItems: 'center',
-      ...theme.shadows.card,
     },
     statIcon: {
       marginBottom: theme.spacing.sm,
     },
-    statCardPrimary: {
-      backgroundColor: theme.colors.surfacePrimary,
-    },
-    statCardSuccess: {
-      backgroundColor: theme.colors.successLight,
-    },
     statValue: {
       fontSize: theme.typography.size.xxl,
-      fontFamily: theme.typography.font.bold,
       fontWeight: '700',
       color: theme.colors.textPrimary,
       marginBottom: theme.spacing.xs,
     },
     statLabel: {
       fontSize: theme.typography.size.xs,
-      fontFamily: theme.typography.font.medium,
       color: theme.colors.textSecondary,
       fontWeight: '600',
     },
-    progressCard: {
-      backgroundColor: theme.colors.surface,
-      borderRadius: theme.radius.lg,
-      padding: theme.spacing.lg,
-      marginBottom: theme.spacing.xxl,
-      ...theme.shadows.card,
-    },
     progressTitle: {
       fontSize: theme.typography.size.md,
-      fontFamily: theme.typography.font.semiBold,
       fontWeight: '600',
       marginBottom: theme.spacing.md,
       color: theme.colors.textPrimary,
@@ -144,10 +129,31 @@ export default function HomeScreen({ navigation }: any) {
       height: '100%',
       backgroundColor: theme.colors.primary,
     },
+    goalCardRow1: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: theme.spacing.sm,
+    },
+    goalIcon: {
+      marginRight: theme.spacing.sm,
+    },
+    goalTitle: {
+      fontSize: theme.typography.size.md,
+      fontWeight: theme.typography.weight.bold,
+      color: theme.colors.textPrimary,
+      flex: 1,
+    },
+    goalCardRow2: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    goalBadge: {
+      marginRight: 0,
+    },
     progressText: {
       fontSize: theme.typography.size.sm,
-      fontFamily: theme.typography.font.semiBold,
-      fontWeight: '600',
+      fontWeight: theme.typography.weight.semiBold,
       color: theme.colors.primary,
     },
     recentSection: {
@@ -161,63 +167,13 @@ export default function HomeScreen({ navigation }: any) {
     },
     sectionTitle: {
       fontSize: theme.typography.size.lg,
-      fontFamily: theme.typography.font.semiBold,
       fontWeight: '600',
       color: theme.colors.textPrimary,
     },
     viewAllText: {
       fontSize: theme.typography.size.sm,
-      fontFamily: theme.typography.font.semiBold,
       color: theme.colors.primary,
       fontWeight: '600',
-    },
-    goalCard: {
-      backgroundColor: theme.colors.surface,
-      borderRadius: theme.radius.lg,
-      padding: theme.spacing.lg,
-      marginBottom: theme.spacing.md,
-      ...theme.shadows.card,
-    },
-    goalHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: theme.spacing.sm,
-    },
-    goalIcon: {
-      marginRight: theme.spacing.sm,
-    },
-    goalTitle: {
-      fontSize: theme.typography.size.md,
-      fontFamily: theme.typography.font.semiBold,
-      fontWeight: '600',
-      flex: 1,
-      color: theme.colors.textPrimary,
-    },
-    goalFooter: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    statusBadge: {
-      fontSize: theme.typography.size.xs,
-      fontFamily: theme.typography.font.semiBold,
-      fontWeight: '600',
-      textTransform: 'capitalize',
-      paddingHorizontal: theme.spacing.sm,
-      paddingVertical: theme.spacing.xs,
-      borderRadius: theme.radius.md,
-    },
-    statusin_progress: {
-      backgroundColor: theme.colors.warningLight,
-      color: theme.colors.warningDark,
-    },
-    statuscompleted: {
-      backgroundColor: theme.colors.successLight,
-      color: theme.colors.success,
-    },
-    statusnot_started: {
-      backgroundColor: theme.colors.divider,
-      color: theme.colors.textSecondary,
     },
     emptyContainer: {
       alignItems: 'center',
@@ -225,14 +181,12 @@ export default function HomeScreen({ navigation }: any) {
     },
     emptyText: {
       fontSize: theme.typography.size.xl,
-      fontFamily: theme.typography.font.semiBold,
       fontWeight: '600',
       color: theme.colors.textSecondary,
       marginBottom: theme.spacing.sm,
     },
     emptySubtext: {
       fontSize: theme.typography.size.sm,
-      fontFamily: theme.typography.font.regular,
       color: theme.colors.textTertiary,
     },
   });
@@ -246,38 +200,40 @@ export default function HomeScreen({ navigation }: any) {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.welcome}>Welcome back, {user?.name || 'User'}!</Text>
+    <View style={styles.container}>
+      <TopBar title="Home" />
+      <ScrollView>
+        <View style={styles.content}>
+          <Text style={styles.welcome}>Welcome back, {user?.name || 'User'}!</Text>
         <Text style={styles.subtitle}>Your career goals overview</Text>
 
         {/* Statistics Cards */}
         <View style={styles.statsContainer}>
-          <View style={styles.statCard}>
+          <CardBase style={[styles.statCardBase, { flex: 1, marginHorizontal: theme.spacing.xs, alignItems: 'center' }]}>
             <Ionicons name="flag" size={28} color={theme.colors.primary} style={styles.statIcon} />
             <Text style={styles.statValue}>{totalGoals}</Text>
             <Text style={styles.statLabel}>Total Goals</Text>
-          </View>
-          <View style={[styles.statCard, styles.statCardPrimary]}>
+          </CardBase>
+          <CardBase style={[styles.statCardBase, { flex: 1, marginHorizontal: theme.spacing.xs, alignItems: 'center', backgroundColor: theme.colors.surfacePrimary }]}>
             <Ionicons name="hourglass" size={28} color={theme.colors.primary} style={styles.statIcon} />
             <Text style={styles.statValue}>{inProgressGoals}</Text>
             <Text style={styles.statLabel}>In Progress</Text>
-          </View>
-          <View style={[styles.statCard, styles.statCardSuccess]}>
+          </CardBase>
+          <CardBase style={[styles.statCardBase, { flex: 1, marginHorizontal: theme.spacing.xs, alignItems: 'center', backgroundColor: theme.colors.successLight }]}>
             <Ionicons name="checkmark-circle" size={28} color={theme.colors.success} style={styles.statIcon} />
             <Text style={styles.statValue}>{completedGoals}</Text>
             <Text style={styles.statLabel}>Completed</Text>
-          </View>
+          </CardBase>
         </View>
 
         {/* Average Progress Card */}
-        <View style={styles.progressCard}>
+        <CardBase style={{ padding: theme.spacing.lg, marginBottom: theme.spacing.xxl }}>
           <Text style={styles.progressTitle}>Overall Progress</Text>
           <View style={styles.progressBarContainer}>
             <View style={[styles.progressBar, { width: `${averageProgress}%` }]} />
           </View>
           <Text style={styles.progressText}>{averageProgress}%</Text>
-        </View>
+        </CardBase>
 
         {/* Recent Goals */}
         {recentGoals.length > 0 && (
@@ -296,35 +252,47 @@ export default function HomeScreen({ navigation }: any) {
 
               if (goal.progress === 100) {
                 displayStatus = 'completed';
-                iconName = 'checkmark-circle-outline';
+                iconName = 'checkmark-circle';
                 iconColor = theme.colors.success;
               } else if (goal.progress > 0 && goal.progress < 100) {
                 displayStatus = 'in_progress';
-                iconName = 'refresh-outline';
+                iconName = 'refresh';
                 iconColor = theme.colors.warning;
               } else {
                 displayStatus = 'not_started';
-                iconName = 'flag-outline';
+                iconName = 'flag';
                 iconColor = theme.colors.textTertiary;
               }
 
               return (
-                <TouchableOpacity
+                <PressableCard
                   key={goal.id}
-                  style={styles.goalCard}
                   onPress={() => navigation.navigate('GoalDetail', { goalId: goal.id })}
+                  style={{ marginBottom: theme.spacing.md }}
                 >
-                  <View style={styles.goalHeader}>
-                    <Ionicons name={iconName} size={20} color={iconColor} style={styles.goalIcon} />
-                    <Text style={styles.goalTitle}>{goal.title}</Text>
-                  </View>
-                  <View style={styles.goalFooter}>
-                    <Text style={[styles.statusBadge, styles[`status${displayStatus}`]]}>
-                      {displayStatus.replace('_', ' ')}
+                  {/* Row 1: Icon and Title */}
+                  <View style={styles.goalCardRow1}>
+                    <Ionicons 
+                      name={iconName} 
+                      size={24} 
+                      color={iconColor} 
+                      style={styles.goalIcon}
+                    />
+                    <Text style={styles.goalTitle} numberOfLines={1}>
+                      {goal.title}
                     </Text>
+                  </View>
+
+                  {/* Row 2: Status and Progress */}
+                  <View style={styles.goalCardRow2}>
+                    <Badge 
+                      label={displayStatus.replace('_', ' ')} 
+                      variant={getBadgeVariant(displayStatus)}
+                      style={styles.goalBadge}
+                    />
                     <Text style={styles.progressText}>{goal.progress}%</Text>
                   </View>
-                </TouchableOpacity>
+                </PressableCard>
               );
             })}
           </View>
@@ -337,7 +305,8 @@ export default function HomeScreen({ navigation }: any) {
           </View>
         )}
       </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 

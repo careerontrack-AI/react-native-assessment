@@ -4,14 +4,16 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  TextInput,
-  TouchableOpacity,
   ActivityIndicator,
   Alert,
 } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { useAuth } from '../context/AuthContext';
 import { userService } from '../services/api';
+import Button from '../components/ui/Button';
+import Input from '../components/ui/Input';
+import Label from '../components/ui/Label';
+import TopBar from '../components/TopBar';
 
 // TODO: Task 2 - Complete Profile Screen
 // Requirements:
@@ -95,7 +97,6 @@ export default function ProfileScreen() {
     },
     title: {
       fontSize: theme.typography.size.xxl,
-      fontFamily: theme.typography.font.bold,
       fontWeight: '700',
       marginBottom: theme.spacing.xxl,
       color: theme.colors.textPrimary,
@@ -103,59 +104,12 @@ export default function ProfileScreen() {
     section: {
       marginBottom: theme.spacing.xxl,
     },
-    label: {
-      fontSize: theme.typography.size.sm,
-      fontFamily: theme.typography.font.medium,
-      fontWeight: '600',
-      marginBottom: theme.spacing.sm,
-      color: theme.colors.textSecondary,
-    },
     value: {
       fontSize: theme.typography.size.md,
-      fontFamily: theme.typography.font.regular,
-      color: theme.colors.textPrimary,
-    },
-    input: {
-      borderWidth: 1,
-      borderColor: theme.colors.border,
-      borderRadius: theme.radius.lg,
-      padding: theme.spacing.md,
-      fontSize: theme.typography.size.md,
-      fontFamily: theme.typography.font.regular,
-      backgroundColor: theme.colors.surfaceAlt,
       color: theme.colors.textPrimary,
     },
     buttonContainer: {
       marginTop: theme.spacing.sm,
-    },
-    button: {
-      borderRadius: theme.radius.lg,
-      padding: theme.spacing.lg,
-      alignItems: 'center',
-      marginBottom: theme.spacing.md,
-      ...theme.shadows.card,
-    },
-    editButton: {
-      backgroundColor: theme.colors.primary,
-    },
-    saveButton: {
-      backgroundColor: theme.colors.success,
-    },
-    cancelButton: {
-      backgroundColor: theme.colors.textTertiary,
-    },
-    logoutButton: {
-      backgroundColor: theme.colors.error,
-      marginTop: theme.spacing.xl,
-    },
-    buttonText: {
-      color: theme.colors.white,
-      fontSize: theme.typography.size.md,
-      fontFamily: theme.typography.font.semiBold,
-      fontWeight: '600',
-    },
-    logoutButtonText: {
-      color: theme.colors.white,
     },
   });
 
@@ -168,19 +122,18 @@ export default function ProfileScreen() {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Profile</Text>
+    <View style={styles.container}>
+      <TopBar title="Profile" />
+      <ScrollView>
+        <View style={styles.content}>
 
         <View style={styles.section}>
-          <Text style={styles.label}>Name</Text>
+          <Label>Name</Label>
           {isEditing ? (
-            <TextInput
-              style={styles.input}
+            <Input
               value={name}
               onChangeText={setName}
               placeholder="Enter your name"
-              placeholderTextColor={theme.colors.textTertiary}
             />
           ) : (
             <Text style={styles.value}>{name}</Text>
@@ -188,14 +141,12 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.label}>Email</Text>
+          <Label>Email</Label>
           {isEditing ? (
-            <TextInput
-              style={styles.input}
+            <Input
               value={email}
               onChangeText={setEmail}
               placeholder="Enter your email"
-              placeholderTextColor={theme.colors.textTertiary}
               keyboardType="email-address"
               autoCapitalize="none"
             />
@@ -207,47 +158,49 @@ export default function ProfileScreen() {
         <View style={styles.buttonContainer}>
           {isEditing ? (
             <>
-              <TouchableOpacity
-                style={[styles.button, styles.saveButton]}
+              <Button
+                title="Save"
                 onPress={handleSave}
                 disabled={loading}
-              >
-                {loading ? (
-                  <ActivityIndicator color={theme.colors.white} />
-                ) : (
-                  <Text style={styles.buttonText}>Save</Text>
-                )}
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.button, styles.cancelButton]}
+                loading={loading}
+                variant="default"
+                size="lg"
+                style={{ marginBottom: theme.spacing.md }}
+              />
+              <Button
+                title="Cancel"
                 onPress={() => {
                   setIsEditing(false);
                   setName(user?.name || '');
                   setEmail(user?.email || '');
                 }}
                 disabled={loading}
-              >
-                <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableOpacity>
+                variant="outline"
+                size="lg"
+                style={{ marginBottom: theme.spacing.md }}
+              />
             </>
           ) : (
-            <TouchableOpacity
-              style={[styles.button, styles.editButton]}
+            <Button
+              title="Edit Profile"
               onPress={() => setIsEditing(true)}
-            >
-              <Text style={styles.buttonText}>Edit Profile</Text>
-            </TouchableOpacity>
+              variant="default"
+              size="lg"
+              style={{ marginBottom: theme.spacing.md }}
+            />
           )}
         </View>
 
-        <TouchableOpacity
-          style={[styles.button, styles.logoutButton]}
+        <Button
+          title="Logout"
           onPress={handleLogout}
-        >
-          <Text style={[styles.buttonText, styles.logoutButtonText]}>Logout</Text>
-        </TouchableOpacity>
+          variant="destructive"
+          size="lg"
+          style={{ marginTop: theme.spacing.xl }}
+        />
       </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 

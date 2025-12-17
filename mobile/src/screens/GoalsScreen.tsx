@@ -9,7 +9,6 @@ import {
   ActivityIndicator,
   Alert,
   Modal,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -17,6 +16,12 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/ThemeProvider';
 import { goalService } from '../services/api';
+import Badge from '../components/ui/Badge';
+import Input from '../components/ui/Input';
+import Label from '../components/ui/Label';
+import { PressableCard } from '../components/ui/Card';
+import Button from '../components/ui/Button';
+import TopBar from '../components/TopBar';
 
 interface Goal {
   id: number;
@@ -94,25 +99,62 @@ export default function GoalsScreen({ navigation }: any) {
     setModalVisible(false);
   };
 
-  const renderGoal = ({ item }: { item: Goal }) => (
-    <TouchableOpacity
-      style={styles.goalCard}
-      onPress={() => navigation.navigate('GoalDetail', { goalId: item.id })}
-    >
-      <Text style={styles.goalTitle}>{item.title}</Text>
-      {item.description && (
-        <Text style={styles.goalDescription} numberOfLines={2}>
-          {item.description}
-        </Text>
-      )}
-      <View style={styles.goalFooter}>
-        <View style={[styles.statusBadge, styles[`status${item.status}`]]}>
-          <Text style={styles.statusText}>{item.status.replace('_', ' ')}</Text>
+  const getBadgeVariant = (status: string): 'owned' | 'notOwned' | 'outline' => {
+    if (status === 'completed') return 'owned';
+    if (status === 'in_progress') return 'notOwned';
+    return 'outline';
+  };
+
+  const getGoalIcon = (progress: number): { name: keyof typeof Ionicons.glyphMap; color: string } => {
+    if (progress === 100) {
+      return { name: 'checkmark-circle', color: theme.colors.success };
+    } else if (progress > 0 && progress < 100) {
+      return { name: 'refresh', color: theme.colors.warning };
+    } else {
+      return { name: 'flag', color: theme.colors.textTertiary };
+    }
+  };
+
+  const getGoalStatus = (progress: number): string => {
+    if (progress === 100) return 'completed';
+    if (progress > 0 && progress < 100) return 'in_progress';
+    return 'not_started';
+  };
+
+  const renderGoal = ({ item }: { item: Goal }) => {
+    const displayStatus = getGoalStatus(item.progress);
+    const icon = getGoalIcon(item.progress);
+
+    return (
+      <PressableCard
+        onPress={() => navigation.navigate('GoalDetail', { goalId: item.id })}
+        style={{ marginBottom: theme.spacing.md }}
+      >
+        {/* Row 1: Icon and Title */}
+        <View style={styles.goalCardRow1}>
+          <Ionicons 
+            name={icon.name} 
+            size={24} 
+            color={icon.color} 
+            style={styles.goalIcon}
+          />
+          <Text style={styles.goalTitle} numberOfLines={1}>
+            {item.title}
+          </Text>
         </View>
-        <Text style={styles.progressText}>{item.progress}%</Text>
-      </View>
-    </TouchableOpacity>
-  );
+
+        {/* Row 2: Status and Progress */}
+        <View style={styles.goalCardRow2}>
+          <Badge 
+            label={displayStatus.replace('_', ' ')} 
+            variant={getBadgeVariant(displayStatus)}
+            style={styles.goalBadge}
+          />
+          <Text style={styles.progressText}>{item.progress}%</Text>
+        </View>
+      </PressableCard>
+    );
+  };
 
   const styles = StyleSheet.create({
     container: {
@@ -128,56 +170,31 @@ export default function GoalsScreen({ navigation }: any) {
     list: {
       padding: theme.spacing.lg,
     },
-    goalCard: {
-      backgroundColor: theme.colors.surface,
-      borderRadius: theme.radius.lg,
-      padding: theme.spacing.lg,
-      marginBottom: theme.spacing.md,
-      ...theme.shadows.card,
+    goalCardRow1: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: theme.spacing.sm,
+    },
+    goalIcon: {
+      marginRight: theme.spacing.sm,
     },
     goalTitle: {
-      fontSize: theme.typography.size.lg,
-      fontFamily: theme.typography.font.semiBold,
-      fontWeight: '600',
-      marginBottom: theme.spacing.sm,
+      fontSize: theme.typography.size.md,
+      fontWeight: theme.typography.weight.bold,
       color: theme.colors.textPrimary,
+      flex: 1,
     },
-    goalDescription: {
-      fontSize: theme.typography.size.sm,
-      fontFamily: theme.typography.font.regular,
-      color: theme.colors.textSecondary,
-      marginBottom: theme.spacing.md,
-    },
-    goalFooter: {
+    goalCardRow2: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
       alignItems: 'center',
+      justifyContent: 'space-between',
     },
-    statusBadge: {
-      paddingHorizontal: theme.spacing.md,
-      paddingVertical: theme.spacing.xs,
-      borderRadius: theme.radius.pill,
-    },
-    statusnot_started: {
-      backgroundColor: theme.colors.divider,
-    },
-    statusin_progress: {
-      backgroundColor: theme.colors.warningLight,
-    },
-    statuscompleted: {
-      backgroundColor: theme.colors.successLight,
-    },
-    statusText: {
-      fontSize: theme.typography.size.xs,
-      fontFamily: theme.typography.font.semiBold,
-      fontWeight: '600',
-      textTransform: 'capitalize',
-      color: theme.colors.textSecondary,
+    goalBadge: {
+      marginRight: 0,
     },
     progressText: {
       fontSize: theme.typography.size.sm,
-      fontFamily: theme.typography.font.semiBold,
-      fontWeight: '600',
+      fontWeight: theme.typography.weight.semiBold,
       color: theme.colors.primary,
     },
     emptyText: {
@@ -242,27 +259,6 @@ export default function GoalsScreen({ navigation }: any) {
     inputContainer: {
       marginBottom: theme.spacing.xl,
     },
-    label: {
-      fontSize: theme.typography.size.sm,
-      fontFamily: theme.typography.font.medium,
-      fontWeight: '600',
-      marginBottom: theme.spacing.sm,
-      color: theme.colors.textSecondary,
-    },
-    input: {
-      borderWidth: 1,
-      borderColor: theme.colors.border,
-      borderRadius: theme.radius.lg,
-      padding: theme.spacing.md,
-      fontSize: theme.typography.size.md,
-      fontFamily: theme.typography.font.regular,
-      backgroundColor: theme.colors.surfaceAlt,
-      color: theme.colors.textPrimary,
-    },
-    textArea: {
-      height: 100,
-      paddingTop: theme.spacing.md,
-    },
     modalFooter: {
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -270,35 +266,15 @@ export default function GoalsScreen({ navigation }: any) {
       paddingTop: theme.spacing.md,
       gap: theme.spacing.md,
     },
-    button: {
-      flex: 1,
-      padding: theme.spacing.md,
-      borderRadius: theme.radius.lg,
-      alignItems: 'center',
-      justifyContent: 'center',
-      ...theme.shadows.card,
-    },
-    cancelButton: {
-      backgroundColor: theme.colors.surfaceAlt,
-    },
-    addButton: {
-      backgroundColor: theme.colors.primary,
-    },
-    buttonDisabled: {
-      opacity: 0.6,
-    },
-    buttonText: {
-      fontSize: theme.typography.size.md,
-      fontFamily: theme.typography.font.semiBold,
-      fontWeight: '600',
-      color: theme.colors.white,
-    },
   });
 
   if (loading && goals.length === 0) {
     return (
-      <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color={theme.colors.primary} />
+      <View style={styles.container}>
+        <TopBar title="Goals" />
+        <View style={styles.centerContainer}>
+          <ActivityIndicator size="large" color={theme.colors.primary} />
+        </View>
       </View>
     );
   }
@@ -306,6 +282,8 @@ export default function GoalsScreen({ navigation }: any) {
   if (goals.length === 0 && !loading) {
     return (
       <View style={styles.container}>
+        <TopBar title="Goals" />
+      <View style={{ flex: 1 }}>
         <View style={styles.centerContainer}>
           <Text style={styles.emptyText}>No goals yet</Text>
           <Text style={styles.emptySubtext}>Create your first career goal!</Text>
@@ -342,11 +320,9 @@ export default function GoalsScreen({ navigation }: any) {
 
                 <ScrollView style={styles.modalBody}>
                   <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Title *</Text>
-                    <TextInput
-                      style={styles.input}
+                    <Label>Title *</Label>
+                    <Input
                       placeholder="Enter goal title"
-                      placeholderTextColor={theme.colors.textTertiary}
                       value={newGoalTitle}
                       onChangeText={setNewGoalTitle}
                       autoFocus
@@ -354,11 +330,10 @@ export default function GoalsScreen({ navigation }: any) {
                   </View>
 
                   <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Description</Text>
-                    <TextInput
-                      style={[styles.input, styles.textArea]}
+                    <Label>Description</Label>
+                    <Input
+                      style={{ height: 100, paddingTop: theme.spacing.md, textAlignVertical: 'top' }}
                       placeholder="Enter goal description (optional)"
-                      placeholderTextColor={theme.colors.textTertiary}
                       value={newGoalDescription}
                       onChangeText={setNewGoalDescription}
                       multiline
@@ -369,128 +344,131 @@ export default function GoalsScreen({ navigation }: any) {
                 </ScrollView>
 
                 <View style={styles.modalFooter}>
-                  <TouchableOpacity
-                    style={[styles.button, styles.cancelButton]}
+                  <Button
+                    title="Cancel"
                     onPress={handleCloseModal}
                     disabled={addingGoal}
-                  >
-                    <Text style={[styles.buttonText, { color: theme.colors.textSecondary }]}>Cancel</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.button, styles.addButton, addingGoal && styles.buttonDisabled]}
+                    variant="outline"
+                    size="lg"
+                    style={{ flex: 1 }}
+                    textStyle={{ color: theme.colors.textSecondary }}
+                  />
+                  <Button
+                    title="Add Goal"
                     onPress={handleAddGoal}
                     disabled={addingGoal}
-                  >
-                    {addingGoal ? (
-                      <ActivityIndicator color={theme.colors.white} />
-                    ) : (
-                      <Text style={styles.buttonText}>Add Goal</Text>
-                    )}
-                  </TouchableOpacity>
+                    loading={addingGoal}
+                    variant="default"
+                    size="lg"
+                    style={{ flex: 1 }}
+                  />
                 </View>
               </View>
             </KeyboardAvoidingView>
           </View>
         </Modal>
       </View>
-    );
-  }
+    </View>
+  );
+}
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={goals}
-        renderItem={renderGoal}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.list}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      />
-      
-      {/* FAB Button */}
-      <TouchableOpacity
-        style={styles.fab}
-        onPress={() => setModalVisible(true)}
-      >
-        <Ionicons name="add" size={28} color="#fff" />
-      </TouchableOpacity>
+      <TopBar title="Goals" />
+    <View style={{ flex: 1 }}>
+        <FlatList
+          data={goals}
+          renderItem={renderGoal}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.list}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        />
+        
+        {/* FAB Button */}
+        <TouchableOpacity
+          style={styles.fab}
+          onPress={() => setModalVisible(true)}
+        >
+          <Ionicons name="add" size={28} color={theme.colors.white} />
+        </TouchableOpacity>
 
-      {/* Bottom Sheet Modal */}
-      <Modal
-        visible={modalVisible}
-        transparent
-        animationType="slide"
-        onRequestClose={handleCloseModal}
-      >
-        <View style={styles.modalOverlay}>
-          <TouchableOpacity
-            style={styles.modalBackdrop}
-            activeOpacity={1}
-            onPress={handleCloseModal}
-          />
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.modalContentContainer}
-          >
-            <View style={styles.modalContent}>
-              <View style={styles.modalHeader}>
-                <Text style={styles.modalTitle}>Add New Goal</Text>
-                <TouchableOpacity onPress={handleCloseModal}>
-                  <Ionicons name="close" size={24} color="#666" />
-                </TouchableOpacity>
-              </View>
-
-              <ScrollView style={styles.modalBody}>
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Title *</Text>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Enter goal title"
-                    value={newGoalTitle}
-                    onChangeText={setNewGoalTitle}
-                    autoFocus
-                  />
+        {/* Bottom Sheet Modal */}
+        <Modal
+          visible={modalVisible}
+          transparent
+          animationType="slide"
+          onRequestClose={handleCloseModal}
+        >
+          <View style={styles.modalOverlay}>
+            <TouchableOpacity
+              style={styles.modalBackdrop}
+              activeOpacity={1}
+              onPress={handleCloseModal}
+            />
+            <KeyboardAvoidingView
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              style={styles.modalContentContainer}
+            >
+              <View style={styles.modalContent}>
+                <View style={styles.modalHeader}>
+                  <Text style={styles.modalTitle}>Add New Goal</Text>
+                  <TouchableOpacity onPress={handleCloseModal}>
+                    <Ionicons name="close" size={24} color={theme.colors.textSecondary} />
+                  </TouchableOpacity>
                 </View>
 
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Description</Text>
-                  <TextInput
-                    style={[styles.input, styles.textArea]}
-                    placeholder="Enter goal description (optional)"
-                    value={newGoalDescription}
-                    onChangeText={setNewGoalDescription}
-                    multiline
-                    numberOfLines={4}
-                    textAlignVertical="top"
+                <ScrollView style={styles.modalBody}>
+                  <View style={styles.inputContainer}>
+                    <Label>Title *</Label>
+                    <Input
+                      placeholder="Enter goal title"
+                      value={newGoalTitle}
+                      onChangeText={setNewGoalTitle}
+                      autoFocus
+                    />
+                  </View>
+
+                  <View style={styles.inputContainer}>
+                    <Label>Description</Label>
+                    <Input
+                      style={{ height: 100, paddingTop: theme.spacing.md, textAlignVertical: 'top' }}
+                      placeholder="Enter goal description (optional)"
+                      value={newGoalDescription}
+                      onChangeText={setNewGoalDescription}
+                      multiline
+                      numberOfLines={4}
+                      textAlignVertical="top"
+                    />
+                  </View>
+                </ScrollView>
+
+                <View style={styles.modalFooter}>
+                  <Button
+                    title="Cancel"
+                    onPress={handleCloseModal}
+                    disabled={addingGoal}
+                    variant="outline"
+                    size="lg"
+                    style={{ flex: 1 }}
+                    textStyle={{ color: theme.colors.textSecondary }}
+                  />
+                  <Button
+                    title="Add Goal"
+                    onPress={handleAddGoal}
+                    disabled={addingGoal}
+                    loading={addingGoal}
+                    variant="default"
+                    size="lg"
+                    style={{ flex: 1 }}
                   />
                 </View>
-              </ScrollView>
-
-              <View style={styles.modalFooter}>
-                <TouchableOpacity
-                  style={[styles.button, styles.cancelButton]}
-                  onPress={handleCloseModal}
-                  disabled={addingGoal}
-                >
-                  <Text style={[styles.buttonText, { color: theme.colors.textSecondary }]}>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.button, styles.addButton, addingGoal && styles.buttonDisabled]}
-                  onPress={handleAddGoal}
-                  disabled={addingGoal}
-                >
-                  {addingGoal ? (
-                    <ActivityIndicator color="#fff" />
-                  ) : (
-                    <Text style={styles.buttonText}>Add Goal</Text>
-                  )}
-                </TouchableOpacity>
               </View>
-            </View>
-          </KeyboardAvoidingView>
+            </KeyboardAvoidingView>
         </View>
       </Modal>
+      </View>
     </View>
   );
 }

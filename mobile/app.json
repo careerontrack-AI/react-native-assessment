@@ -13,7 +13,8 @@
       "bundleIdentifier": "com.careerontrack.app"
     },
     "android": {
-      "package": "com.careerontrack.app"
+      "package": "com.careerontrack.app",
+      "usesCleartextTraffic": true
     },
     "web": {
       "favicon": "./assets/favicon.png"

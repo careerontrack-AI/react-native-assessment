@@ -10,6 +10,9 @@ import {
 } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { goalService } from '../services/api';
+import Button from '../components/ui/Button';
+import Label from '../components/ui/Label';
+import TopBar from '../components/TopBar';
 
 interface Goal {
   id: number;
@@ -106,27 +109,18 @@ export default function GoalDetailScreen({ route, navigation }: any) {
     },
     title: {
       fontSize: theme.typography.size.xl,
-      fontFamily: theme.typography.font.bold,
       fontWeight: '700',
       marginBottom: theme.spacing.md,
       color: theme.colors.textPrimary,
     },
     description: {
       fontSize: theme.typography.size.md,
-      fontFamily: theme.typography.font.regular,
       color: theme.colors.textSecondary,
       marginBottom: theme.spacing.xxl,
       lineHeight: theme.typography.lineHeight.lg,
     },
     section: {
       marginBottom: theme.spacing.xxl,
-    },
-    sectionTitle: {
-      fontSize: theme.typography.size.md,
-      fontFamily: theme.typography.font.semiBold,
-      fontWeight: '600',
-      marginBottom: theme.spacing.md,
-      color: theme.colors.textSecondary,
     },
     statusContainer: {
       flexDirection: 'row',
@@ -146,7 +140,6 @@ export default function GoalDetailScreen({ route, navigation }: any) {
     },
     statusButtonText: {
       fontSize: theme.typography.size.sm,
-      fontFamily: theme.typography.font.semiBold,
       fontWeight: '600',
       textTransform: 'capitalize',
       color: theme.colors.textSecondary,
@@ -167,7 +160,6 @@ export default function GoalDetailScreen({ route, navigation }: any) {
     },
     progressText: {
       fontSize: theme.typography.size.sm,
-      fontFamily: theme.typography.font.semiBold,
       fontWeight: '600',
       color: theme.colors.primary,
     },
@@ -179,23 +171,8 @@ export default function GoalDetailScreen({ route, navigation }: any) {
     },
     metaText: {
       fontSize: theme.typography.size.xs,
-      fontFamily: theme.typography.font.regular,
       color: theme.colors.textTertiary,
       marginBottom: theme.spacing.xs,
-    },
-    deleteButton: {
-      marginTop: theme.spacing.xxl,
-      padding: theme.spacing.lg,
-      borderRadius: theme.radius.lg,
-      backgroundColor: theme.colors.error,
-      alignItems: 'center',
-      ...theme.shadows.card,
-    },
-    deleteButtonText: {
-      color: theme.colors.white,
-      fontSize: theme.typography.size.md,
-      fontFamily: theme.typography.font.semiBold,
-      fontWeight: '600',
     },
   });
 
@@ -216,16 +193,17 @@ export default function GoalDetailScreen({ route, navigation }: any) {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>{goal.title}</Text>
+    <View style={styles.container}>
+      <TopBar title={goal.title} onBack={() => navigation.goBack()} />
+      <ScrollView>
+        <View style={styles.content}>
         
         {goal.description && (
           <Text style={styles.description}>{goal.description}</Text>
         )}
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Status</Text>
+          <Label>Status</Label>
           <View style={styles.statusContainer}>
             {['not_started', 'in_progress', 'completed'].map((status) => (
               <TouchableOpacity
@@ -250,7 +228,7 @@ export default function GoalDetailScreen({ route, navigation }: any) {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Progress</Text>
+          <Label>Progress</Label>
           <View style={styles.progressBar}>
             <View
               style={[styles.progressFill, { width: `${goal.progress}%` }]}
@@ -268,11 +246,16 @@ export default function GoalDetailScreen({ route, navigation }: any) {
           </Text>
         </View>
 
-        <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-          <Text style={styles.deleteButtonText}>Delete Goal</Text>
-        </TouchableOpacity>
+        <Button
+          title="Delete Goal"
+          onPress={handleDelete}
+          variant="destructive"
+          size="lg"
+          style={{ marginTop: theme.spacing.xxl }}
+        />
       </View>
     </ScrollView>
+    </View>
   );
 }
 

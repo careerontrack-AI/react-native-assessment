@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
-  TouchableOpacity,
   StyleSheet,
   Alert,
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../theme/ThemeProvider';
+import Label from '../components/ui/Label';
+import Input from '../components/ui/Input';
+import Button from '../components/ui/Button';
 
 export default function LoginScreen() {
   const theme = useTheme();
@@ -42,15 +42,44 @@ export default function LoginScreen() {
   };
 
   const handleLogin = async () => {
-    if (!validateForm()) {
+    if (loading) return; // Prevent double submission
+    
+    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedPassword = password;
+
+    // Validate with normalized email
+    if (!normalizedEmail) {
+      setErrors({ email: 'Email is required' });
+      return;
+    }
+    if (!/\S+@\S+\.\S+/.test(normalizedEmail)) {
+      setErrors({ email: 'Email is invalid' });
+      return;
+    }
+    if (!normalizedPassword) {
+      setErrors({ password: 'Password is required' });
+      return;
+    }
+    if (normalizedPassword.length < 6) {
+      setErrors({ password: 'Password must be at least 6 characters' });
       return;
     }
 
+    setErrors({});
     setLoading(true);
+    
     try {
-      await login(email, password);
+      console.log('Attempting login with:', normalizedEmail);
+      await login(normalizedEmail, normalizedPassword);
+      console.log('Login successful');
     } catch (error: any) {
-      Alert.alert('Login Failed', error.response?.data?.error || 'Invalid email or password');
+      console.error('Login error:', error);
+      const message =
+        error?.response?.data?.error ||
+        error?.response?.data?.message ||
+        error?.message ||
+        'Invalid email or password';
+      Alert.alert('Login Failed', message);
     } finally {
       setLoading(false);
     }
@@ -68,7 +97,6 @@ export default function LoginScreen() {
     },
     title: {
       fontSize: theme.typography.size.xxl,
-      fontFamily: theme.typography.font.bold,
       fontWeight: '700',
       textAlign: 'center',
       marginBottom: theme.spacing.sm,
@@ -76,7 +104,6 @@ export default function LoginScreen() {
     },
     subtitle: {
       fontSize: theme.typography.size.md,
-      fontFamily: theme.typography.font.regular,
       textAlign: 'center',
       marginBottom: theme.spacing.xxxl,
       color: theme.colors.textSecondary,
@@ -87,55 +114,16 @@ export default function LoginScreen() {
     inputContainer: {
       marginBottom: theme.spacing.xl,
     },
-    label: {
-      fontSize: theme.typography.size.sm,
-      fontFamily: theme.typography.font.medium,
-      fontWeight: '600',
-      marginBottom: theme.spacing.sm,
-      color: theme.colors.textSecondary,
-    },
-    input: {
-      borderWidth: 1,
-      borderColor: theme.colors.border,
-      borderRadius: theme.radius.lg,
-      padding: theme.spacing.md,
-      fontSize: theme.typography.size.md,
-      fontFamily: theme.typography.font.regular,
-      backgroundColor: theme.colors.surfaceAlt,
-      color: theme.colors.textPrimary,
-    },
-    inputError: {
-      borderColor: theme.colors.error,
-    },
     errorText: {
       color: theme.colors.error,
       fontSize: theme.typography.size.xs,
-      fontFamily: theme.typography.font.regular,
       marginTop: theme.spacing.xs,
-    },
-    button: {
-      backgroundColor: theme.colors.primary,
-      borderRadius: theme.radius.lg,
-      padding: theme.spacing.lg,
-      alignItems: 'center',
-      marginTop: theme.spacing.md,
-      ...theme.shadows.card,
-    },
-    buttonDisabled: {
-      opacity: 0.6,
-    },
-    buttonText: {
-      color: theme.colors.white,
-      fontSize: theme.typography.size.md,
-      fontFamily: theme.typography.font.semiBold,
-      fontWeight: '600',
     },
     demoText: {
       textAlign: 'center',
       marginTop: theme.spacing.xl,
       color: theme.colors.textTertiary,
       fontSize: theme.typography.size.xs,
-      fontFamily: theme.typography.font.regular,
     },
   });
 
@@ -150,11 +138,10 @@ export default function LoginScreen() {
 
         <View style={styles.form}>
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-              style={[styles.input, errors.email && styles.inputError]}
+            <Label>Email</Label>
+            <Input
+              style={errors.email ? { borderColor: theme.colors.error } : undefined}
               placeholder="Enter your email"
-              placeholderTextColor={theme.colors.textTertiary}
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -165,11 +152,10 @@ export default function LoginScreen() {
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Password</Text>
-            <TextInput
-              style={[styles.input, errors.password && styles.inputError]}
+            <Label>Password</Label>
+            <Input
+              style={errors.password ? { borderColor: theme.colors.error } : undefined}
               placeholder="Enter your password"
-              placeholderTextColor={theme.colors.textTertiary}
               value={password}
               onChangeText={setPassword}
               secureTextEntry
@@ -178,17 +164,14 @@ export default function LoginScreen() {
             {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
           </View>
 
-          <TouchableOpacity
-            style={[styles.button, loading && styles.buttonDisabled]}
+          <Button
+            title="Sign In"
             onPress={handleLogin}
-            disabled={loading}
-          >
-            {loading ? (
-              <ActivityIndicator color={theme.colors.white} />
-            ) : (
-              <Text style={styles.buttonText}>Sign In</Text>
-            )}
-          </TouchableOpacity>
+            loading={loading}
+            variant="default"
+            size="lg"
+            style={{ marginTop: theme.spacing.md }}
+          />
         </View>
 
         <Text style={styles.demoText}>
