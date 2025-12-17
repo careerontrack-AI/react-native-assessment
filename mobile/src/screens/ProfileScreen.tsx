@@ -4,13 +4,18 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  TextInput,
-  TouchableOpacity,
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import { useTheme, useThemeContext } from '../theme/ThemeProvider';
 import { useAuth } from '../context/AuthContext';
 import { userService } from '../services/api';
+import Button from '../components/ui/Button';
+import Input from '../components/ui/Input';
+import Label from '../components/ui/Label';
+import TopBar from '../components/TopBar';
+import { Ionicons } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native';
 
 // TODO: Task 2 - Complete Profile Screen
 // Requirements:
@@ -22,6 +27,8 @@ import { userService } from '../services/api';
 // 6. Update local auth context after profile update
 
 export default function ProfileScreen() {
+  const theme = useTheme();
+  const { themeMode, setThemeMode } = useThemeContext();
   const { user, logout, updateUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(user?.name || '');
@@ -77,24 +84,97 @@ export default function ProfileScreen() {
     );
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.surface,
+    },
+    centerContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+    },
+    content: {
+      padding: theme.spacing.xl,
+    },
+    title: {
+      fontSize: theme.typography.size.xxl,
+      fontWeight: theme.typography.weight.bold,
+      fontFamily: theme.typography.font.bold,
+      marginBottom: theme.spacing.xxl,
+      color: theme.colors.textPrimary,
+    },
+    section: {
+      marginBottom: theme.spacing.xxl,
+    },
+    value: {
+      fontSize: theme.typography.size.md,
+      fontFamily: theme.typography.font.regular,
+      color: theme.colors.textPrimary,
+    },
+    buttonContainer: {
+      marginTop: theme.spacing.sm,
+    },
+    themeSection: {
+      marginBottom: theme.spacing.xxl,
+    },
+    themeOptionContainer: {
+      flexDirection: 'row',
+      marginTop: theme.spacing.sm,
+      borderRadius: theme.radius.lg,
+      backgroundColor: theme.colors.surfaceAlt,
+      padding: theme.spacing.xs,
+      gap: theme.spacing.xs,
+    },
+    themeOption: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: theme.spacing.sm,
+      paddingHorizontal: theme.spacing.md,
+      borderRadius: theme.radius.md,
+      gap: theme.spacing.xs,
+    },
+    themeOptionActive: {
+      backgroundColor: theme.colors.surface,
+      ...theme.shadows.card,
+    },
+    themeOptionText: {
+      fontSize: theme.typography.size.sm,
+      fontFamily: theme.typography.font.medium,
+      color: theme.colors.textSecondary,
+    },
+    themeOptionTextActive: {
+      color: theme.colors.textPrimary,
+      fontFamily: theme.typography.font.semiBold,
+    },
+    divider: {
+      height: 1,
+      backgroundColor: theme.colors.border,
+      marginVertical: theme.spacing.xxl,
+    },
+  });
+
   if (loading && !user) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="large" color={theme.colors.primary} />
       </View>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Profile</Text>
+    <View style={styles.container}>
+      <TopBar title="Profile" />
+      <ScrollView>
+        <View style={styles.content}>
 
         <View style={styles.section}>
-          <Text style={styles.label}>Name</Text>
+          <Label>Name</Label>
           {isEditing ? (
-            <TextInput
-              style={styles.input}
+            <Input
               value={name}
               onChangeText={setName}
               placeholder="Enter your name"
@@ -105,10 +185,9 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.label}>Email</Text>
+          <Label>Email</Label>
           {isEditing ? (
-            <TextInput
-              style={styles.input}
+            <Input
               value={email}
               onChangeText={setEmail}
               placeholder="Enter your email"
@@ -123,119 +202,133 @@ export default function ProfileScreen() {
         <View style={styles.buttonContainer}>
           {isEditing ? (
             <>
-              <TouchableOpacity
-                style={[styles.button, styles.saveButton]}
+              <Button
+                title="Save"
                 onPress={handleSave}
                 disabled={loading}
-              >
-                {loading ? (
-                  <ActivityIndicator color="#fff" />
-                ) : (
-                  <Text style={styles.buttonText}>Save</Text>
-                )}
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.button, styles.cancelButton]}
+                loading={loading}
+                variant="default"
+                size="lg"
+                style={{ marginBottom: theme.spacing.md }}
+              />
+              <Button
+                title="Cancel"
                 onPress={() => {
                   setIsEditing(false);
                   setName(user?.name || '');
                   setEmail(user?.email || '');
                 }}
                 disabled={loading}
-              >
-                <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableOpacity>
+                variant="outline"
+                size="lg"
+                style={{ marginBottom: theme.spacing.md }}
+              />
             </>
           ) : (
-            <TouchableOpacity
-              style={[styles.button, styles.editButton]}
+            <Button
+              title="Edit Profile"
               onPress={() => setIsEditing(true)}
-            >
-              <Text style={styles.buttonText}>Edit Profile</Text>
-            </TouchableOpacity>
+              variant="default"
+              size="lg"
+              style={{ marginBottom: theme.spacing.md }}
+            />
           )}
         </View>
 
-        <TouchableOpacity
-          style={[styles.button, styles.logoutButton]}
+        <View style={styles.divider} />
+
+        {/* Theme Toggle Section */}
+        <View style={styles.themeSection}>
+          <Label>Appearance</Label>
+          <View style={styles.themeOptionContainer}>
+            <TouchableOpacity
+              style={[
+                styles.themeOption,
+                themeMode === 'light' && styles.themeOptionActive,
+              ]}
+              onPress={() => setThemeMode('light')}
+            >
+              <Ionicons
+                name="sunny-outline"
+                size={18}
+                color={
+                  themeMode === 'light'
+                    ? theme.colors.textPrimary
+                    : theme.colors.textSecondary
+                }
+              />
+              <Text
+                style={[
+                  styles.themeOptionText,
+                  themeMode === 'light' && styles.themeOptionTextActive,
+                ]}
+              >
+                Light
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.themeOption,
+                themeMode === 'dark' && styles.themeOptionActive,
+              ]}
+              onPress={() => setThemeMode('dark')}
+            >
+              <Ionicons
+                name="moon-outline"
+                size={18}
+                color={
+                  themeMode === 'dark'
+                    ? theme.colors.textPrimary
+                    : theme.colors.textSecondary
+                }
+              />
+              <Text
+                style={[
+                  styles.themeOptionText,
+                  themeMode === 'dark' && styles.themeOptionTextActive,
+                ]}
+              >
+                Dark
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.themeOption,
+                themeMode === 'system' && styles.themeOptionActive,
+              ]}
+              onPress={() => setThemeMode('system')}
+            >
+              <Ionicons
+                name="phone-portrait-outline"
+                size={18}
+                color={
+                  themeMode === 'system'
+                    ? theme.colors.textPrimary
+                    : theme.colors.textSecondary
+                }
+              />
+              <Text
+                style={[
+                  styles.themeOptionText,
+                  themeMode === 'system' && styles.themeOptionTextActive,
+                ]}
+              >
+                System
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <Button
+          title="Logout"
           onPress={handleLogout}
-        >
-          <Text style={[styles.buttonText, styles.logoutButtonText]}>Logout</Text>
-        </TouchableOpacity>
+          variant="destructive"
+          size="lg"
+          style={{ marginTop: theme.spacing.xl }}
+        />
       </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  centerContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  content: {
-    padding: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 24,
-    color: '#1a1a1a',
-  },
-  section: {
-    marginBottom: 24,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 8,
-    color: '#666',
-  },
-  value: {
-    fontSize: 16,
-    color: '#1a1a1a',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    backgroundColor: '#f9f9f9',
-  },
-  buttonContainer: {
-    marginTop: 8,
-  },
-  button: {
-    borderRadius: 8,
-    padding: 16,
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  editButton: {
-    backgroundColor: '#007AFF',
-  },
-  saveButton: {
-    backgroundColor: '#34C759',
-  },
-  cancelButton: {
-    backgroundColor: '#8E8E93',
-  },
-  logoutButton: {
-    backgroundColor: '#ff4444',
-    marginTop: 20,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  logoutButtonText: {
-    color: '#fff',
-  },
-});
 

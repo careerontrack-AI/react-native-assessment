@@ -2,25 +2,19 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
-  TouchableOpacity,
   StyleSheet,
   Alert,
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
-
-// TODO: Task 1 - Complete Login Screen
-// The UI is already set up! You just need to:
-// 1. Call login() from useAuth() hook when button is pressed
-// 2. Show loading state (use the loading state variable)
-// 3. Show error message if login fails (use Alert.alert)
-// 
-// Hint: The form validation is already done, just implement handleLogin function!
+import { useTheme } from '../theme/ThemeProvider';
+import Label from '../components/ui/Label';
+import Input from '../components/ui/Input';
+import Button from '../components/ui/Button';
 
 export default function LoginScreen() {
+  const theme = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -48,27 +42,97 @@ export default function LoginScreen() {
   };
 
   const handleLogin = async () => {
-    // TODO: Implement login functionality
-    // 1. Validate form (already done above)
-    // 2. Set loading to true
-    // 3. Call login(email, password) from useAuth
-    // 4. Show error with Alert.alert if it fails
-    // 5. Set loading to false when done
+    if (loading) return; // Prevent double submission
     
-    if (!validateForm()) {
+    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedPassword = password;
+
+    // Validate with normalized email
+    if (!normalizedEmail) {
+      setErrors({ email: 'Email is required' });
+      return;
+    }
+    if (!/\S+@\S+\.\S+/.test(normalizedEmail)) {
+      setErrors({ email: 'Email is invalid' });
+      return;
+    }
+    if (!normalizedPassword) {
+      setErrors({ password: 'Password is required' });
+      return;
+    }
+    if (normalizedPassword.length < 6) {
+      setErrors({ password: 'Password must be at least 6 characters' });
       return;
     }
 
-    // Your code here:
-    // setLoading(true);
-    // try {
-    //   await login(email, password);
-    // } catch (error: any) {
-    //   Alert.alert('Login Failed', error.response?.data?.error || 'Invalid email or password');
-    // } finally {
-    //   setLoading(false);
-    // }
+    setErrors({});
+    setLoading(true);
+    
+    try {
+      console.log('Attempting login with:', normalizedEmail);
+      await login(normalizedEmail, normalizedPassword);
+      console.log('Login successful');
+    } catch (error: any) {
+      console.error('Login error:', error);
+      const message =
+        error?.response?.data?.error ||
+        error?.response?.data?.message ||
+        error?.message ||
+        'Invalid email or password';
+      Alert.alert('Login Failed', message);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.surface,
+    },
+    content: {
+      flex: 1,
+      justifyContent: 'center',
+      padding: theme.spacing.xl,
+    },
+    title: {
+      fontSize: theme.typography.size.xxl,
+      fontWeight: theme.typography.weight.bold,
+      fontFamily: theme.typography.font.bold,
+      textAlign: 'center',
+      marginBottom: theme.spacing.sm,
+      color: theme.colors.textPrimary,
+    },
+    subtitle: {
+      fontSize: theme.typography.size.md,
+      fontFamily: theme.typography.font.regular,
+      textAlign: 'center',
+      marginBottom: theme.spacing.xxxl,
+      color: theme.colors.textSecondary,
+    },
+    form: {
+      width: '100%',
+    },
+    label: {
+      marginStart: theme.spacing.md,
+    },
+    inputContainer: {
+      marginBottom: theme.spacing.xl,
+    },
+    errorText: {
+      color: theme.colors.error,
+      fontSize: theme.typography.size.xs,
+      fontFamily: theme.typography.font.regular,
+      marginTop: theme.spacing.xs,
+    },
+    demoText: {
+      textAlign: 'center',
+      marginTop: theme.spacing.xl,
+      color: theme.colors.textTertiary,
+      fontSize: theme.typography.size.xs,
+      fontFamily: theme.typography.font.regular,
+    },
+  });
 
   return (
     <KeyboardAvoidingView
@@ -81,9 +145,9 @@ export default function LoginScreen() {
 
         <View style={styles.form}>
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-              style={[styles.input, errors.email && styles.inputError]}
+            <Label style  = {styles.label}>Email</Label>
+            <Input
+              style={errors.email ? { borderColor: theme.colors.error } : undefined}
               placeholder="Enter your email"
               value={email}
               onChangeText={setEmail}
@@ -95,9 +159,9 @@ export default function LoginScreen() {
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Password</Text>
-            <TextInput
-              style={[styles.input, errors.password && styles.inputError]}
+          <Label style  = {styles.label}>Password</Label>
+            <Input
+              style={errors.password ? { borderColor: theme.colors.error } : undefined}
               placeholder="Enter your password"
               value={password}
               onChangeText={setPassword}
@@ -107,17 +171,14 @@ export default function LoginScreen() {
             {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
           </View>
 
-          <TouchableOpacity
-            style={[styles.button, loading && styles.buttonDisabled]}
+          <Button
+            title="Sign In"
             onPress={handleLogin}
-            disabled={loading}
-          >
-            {loading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.buttonText}>Sign In</Text>
-            )}
-          </TouchableOpacity>
+            loading={loading}
+            variant="default"
+            size="lg"
+            style={{ marginTop: theme.spacing.md }}
+          />
         </View>
 
         <Text style={styles.demoText}>
@@ -127,78 +188,4 @@ export default function LoginScreen() {
     </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 8,
-    color: '#1a1a1a',
-  },
-  subtitle: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 40,
-    color: '#666',
-  },
-  form: {
-    width: '100%',
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 8,
-    color: '#333',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    backgroundColor: '#f9f9f9',
-  },
-  inputError: {
-    borderColor: '#ff4444',
-  },
-  errorText: {
-    color: '#ff4444',
-    fontSize: 12,
-    marginTop: 4,
-  },
-  button: {
-    backgroundColor: '#007AFF',
-    borderRadius: 8,
-    padding: 16,
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  buttonDisabled: {
-    opacity: 0.6,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  demoText: {
-    textAlign: 'center',
-    marginTop: 20,
-    color: '#999',
-    fontSize: 12,
-  },
-});
 

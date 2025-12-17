@@ -1,6 +1,8 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../theme/ThemeProvider';
 import LoginScreen from '../screens/LoginScreen';
 import HomeScreen from '../screens/HomeScreen';
 import GoalsScreen from '../screens/GoalsScreen';
@@ -11,15 +13,36 @@ import { useAuth } from '../context/AuthContext';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// TODO: Task 3 - Complete Navigation
-// The navigation structure is already set up! You just need to:
-// 1. Get isAuthenticated from useAuth() hook
-// 2. Replace the hardcoded false with the actual auth state
-// That's it! The navigation will automatically show Login or Main screens based on auth state.
-
 function MainTabs() {
+  const theme = useTheme();
+
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName: keyof typeof Ionicons.glyphMap;
+
+          if (route.name === 'Home') {
+            iconName = focused ? 'home' : 'home-outline';
+          } else if (route.name === 'Goals') {
+            iconName = focused ? 'list' : 'list-outline';
+          } else if (route.name === 'Profile') {
+            iconName = focused ? 'person' : 'person-outline';
+          } else {
+            iconName = 'ellipse-outline';
+          }
+
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: theme.colors.primary,
+        tabBarInactiveTintColor: theme.colors.textTertiary,
+        tabBarStyle: {
+          backgroundColor: theme.colors.surface,
+          borderTopColor: theme.colors.border,
+        },
+        headerShown: false,
+      })}
+    >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Goals" component={GoalsScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
@@ -28,9 +51,7 @@ function MainTabs() {
 }
 
 export default function AppNavigator() {
-  // TODO: Replace this line with actual auth state
-  // const { isAuthenticated } = useAuth();
-  const isAuthenticated = false; // Remove this line and uncomment the line above
+  const { isAuthenticated } = useAuth();
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
