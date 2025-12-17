@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,14 +7,16 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
-} from 'react-native';
-import { goalService } from '../services/api';
+  SafeAreaView,
+} from "react-native";
+import { goalService } from "../services/api";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 interface Goal {
   id: number;
   title: string;
   description: string;
-  status: 'not_started' | 'in_progress' | 'completed';
+  status: "not_started" | "in_progress" | "completed";
   progress: number;
   createdAt: string;
   updatedAt: string;
@@ -30,14 +32,26 @@ interface Goal {
 // 6. Navigate back after delete
 // 7. Handle loading and error states
 
+// The TODOs already had commented implementations. I reviewed them for correctness, uncommented them, and made minor improvements in ui.
 export default function GoalDetailScreen({ route, navigation }: any) {
   const { goalId } = route.params;
   const [goal, setGoal] = useState<Goal | null>(null);
   const [loading, setLoading] = useState(true);
+  const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {
     loadGoal();
   }, [goalId]);
+
+  // Signal GoalsScreen to refresh when going back after changes
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("beforeRemove", () => {
+      if (hasChanges) {
+        navigation.navigate("Goals", { refresh: true });
+      }
+    });
+    return unsubscribe;
+  }, [navigation, hasChanges]);
 
   const loadGoal = async () => {
     try {
@@ -45,8 +59,8 @@ export default function GoalDetailScreen({ route, navigation }: any) {
       const data = await goalService.getGoal(goalId);
       setGoal(data);
     } catch (error) {
-      console.error('Error loading goal:', error);
-      Alert.alert('Error', 'Failed to load goal details');
+      console.error("Error loading goal:", error);
+      Alert.alert("Error", "Failed to load goal details");
       navigation.goBack();
     } finally {
       setLoading(false);
@@ -57,41 +71,45 @@ export default function GoalDetailScreen({ route, navigation }: any) {
     if (!goal) return;
 
     try {
-      const updated = await goalService.updateGoal(goal.id, { status: newStatus });
+      setLoading(true);
+      const updated = await goalService.updateGoal(goal.id, {
+        status: newStatus,
+      });
       setGoal(updated);
+      setHasChanges(true);
     } catch (error) {
-      Alert.alert('Error', 'Failed to update goal status');
+      Alert.alert("Error", "Failed to update goal status");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDelete = () => {
     if (!goal) return;
-
-    Alert.alert(
-      'Delete Goal',
-      'Are you sure you want to delete this goal?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await goalService.deleteGoal(goal.id);
-              navigation.goBack();
-            } catch (error) {
-              Alert.alert('Error', 'Failed to delete goal');
-            }
-          },
+    Alert.alert("Delete Goal", "Are you sure you want to delete this goal?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            setLoading(true);
+            await goalService.deleteGoal(goal.id);
+            navigation.navigate("Goals", { refresh: true });
+          } catch (error) {
+            Alert.alert("Error", "Failed to delete goal");
+          } finally {
+            setLoading(false);
+          }
         },
-      ]
-    );
+      },
+    ]);
   };
 
   if (loading) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <LoadingSpinner name="6-dots" />
       </View>
     );
   }
@@ -104,11 +122,12 @@ export default function GoalDetailScreen({ route, navigation }: any) {
     );
   }
 
+  // Replace scroll view with safe area view so screen didn't not cut notch
   return (
-    <ScrollView style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.title}>{goal.title}</Text>
-        
+
         {goal.description && (
           <Text style={styles.description}>{goal.description}</Text>
         )}
@@ -116,7 +135,7 @@ export default function GoalDetailScreen({ route, navigation }: any) {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Status</Text>
           <View style={styles.statusContainer}>
-            {['not_started', 'in_progress', 'completed'].map((status) => (
+            {["not_started", "in_progress", "completed"].map((status) => (
               <TouchableOpacity
                 key={status}
                 style={[
@@ -131,7 +150,7 @@ export default function GoalDetailScreen({ route, navigation }: any) {
                     goal.status === status && styles.statusButtonTextActive,
                   ]}
                 >
-                  {status.replace('_', ' ')}
+                  {status.replace("_", " ")}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -161,32 +180,32 @@ export default function GoalDetailScreen({ route, navigation }: any) {
           <Text style={styles.deleteButtonText}>Delete Goal</Text>
         </TouchableOpacity>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   centerContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   content: {
     padding: 20,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 12,
-    color: '#1a1a1a',
+    color: "#1a1a1a",
   },
   description: {
     fontSize: 16,
-    color: '#666',
+    color: "#666",
     marginBottom: 24,
     lineHeight: 24,
   },
@@ -195,12 +214,12 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 12,
-    color: '#333',
+    color: "#333",
   },
   statusContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 8,
   },
   statusButton: {
@@ -208,60 +227,59 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#ddd',
-    backgroundColor: '#f9f9f9',
+    borderColor: "#ddd",
+    backgroundColor: "#f9f9f9",
   },
   statusButtonActive: {
-    backgroundColor: '#007AFF',
-    borderColor: '#007AFF',
+    backgroundColor: "#007AFF",
+    borderColor: "#007AFF",
   },
   statusButtonText: {
     fontSize: 14,
-    fontWeight: '600',
-    textTransform: 'capitalize',
-    color: '#666',
+    fontWeight: "600",
+    textTransform: "capitalize",
+    color: "#666",
   },
   statusButtonTextActive: {
-    color: '#fff',
+    color: "#fff",
   },
   progressBar: {
     height: 8,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: "#e0e0e0",
     borderRadius: 4,
-    overflow: 'hidden',
+    overflow: "hidden",
     marginBottom: 8,
   },
   progressFill: {
-    height: '100%',
-    backgroundColor: '#007AFF',
+    height: "100%",
+    backgroundColor: "#007AFF",
   },
   progressText: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#007AFF',
+    fontWeight: "600",
+    color: "#007AFF",
   },
   meta: {
     marginTop: 8,
     paddingTop: 16,
     borderTopWidth: 1,
-    borderTopColor: '#eee',
+    borderTopColor: "#eee",
   },
   metaText: {
     fontSize: 12,
-    color: '#999',
+    color: "#999",
     marginBottom: 4,
   },
   deleteButton: {
     marginTop: 24,
     padding: 16,
     borderRadius: 8,
-    backgroundColor: '#ff4444',
-    alignItems: 'center',
+    backgroundColor: "#ff4444",
+    alignItems: "center",
   },
   deleteButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
-

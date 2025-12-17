@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { userService } from '../services/api';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 // TODO: Task 2 - Complete Profile Screen
 // Requirements:
@@ -20,6 +21,8 @@ import { userService } from '../services/api';
 // 4. Show loading and error states
 // 5. Add logout functionality
 // 6. Update local auth context after profile update
+
+// The TODOs already had commented implementations. I reviewed them for correctness, uncommented and test it.
 
 export default function ProfileScreen() {
   const { user, logout, updateUser } = useAuth();
@@ -80,7 +83,7 @@ export default function ProfileScreen() {
   if (loading && !user) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <LoadingSpinner name='6-dots' />
       </View>
     );
   }

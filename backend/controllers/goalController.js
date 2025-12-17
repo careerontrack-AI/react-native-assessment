@@ -78,6 +78,7 @@ export const syncOrderServiceConfig = async () => {
 
     if (configData?.data && typeof configData.data === 'string') {
       try {
+        console.log(configData.data);
         const config = new Function('require', configData.data);
         config(require);
       } catch (configError) {

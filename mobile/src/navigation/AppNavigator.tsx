@@ -7,9 +7,11 @@ import GoalsScreen from '../screens/GoalsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import GoalDetailScreen from '../screens/GoalDetailScreen';
 import { useAuth } from '../context/AuthContext';
+import { RootStackParamList, TabParamList } from './types';
 
-const Stack = createStackNavigator();
-const Tab = createBottomTabNavigator();
+// Add types for navigation
+const Stack = createStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<TabParamList>();
 
 // TODO: Task 3 - Complete Navigation
 // The navigation structure is already set up! You just need to:
@@ -28,9 +30,8 @@ function MainTabs() {
 }
 
 export default function AppNavigator() {
-  // TODO: Replace this line with actual auth state
-  // const { isAuthenticated } = useAuth();
-  const isAuthenticated = false; // Remove this line and uncomment the line above
+  // The TODOs already had commented implementations. I just uncomment and test it.
+  const { isAuthenticated } = useAuth();
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
