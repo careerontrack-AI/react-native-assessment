@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { goalService } from '../services/api';
 
 interface Goal {
@@ -34,6 +35,7 @@ export default function GoalDetailScreen({ route, navigation }: any) {
   const { goalId } = route.params;
   const [goal, setGoal] = useState<Goal | null>(null);
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     loadGoal();
@@ -45,7 +47,6 @@ export default function GoalDetailScreen({ route, navigation }: any) {
       const data = await goalService.getGoal(goalId);
       setGoal(data);
     } catch (error) {
-      console.error('Error loading goal:', error);
       Alert.alert('Error', 'Failed to load goal details');
       navigation.goBack();
     } finally {
@@ -54,13 +55,17 @@ export default function GoalDetailScreen({ route, navigation }: any) {
   };
 
   const handleUpdateStatus = async (newStatus: string) => {
-    if (!goal) return;
+    if (!goal || updating) return;
 
     try {
+      setUpdating(true);
       const updated = await goalService.updateGoal(goal.id, { status: newStatus });
       setGoal(updated);
+      Alert.alert('Success', 'Goal status updated successfully');
     } catch (error) {
       Alert.alert('Error', 'Failed to update goal status');
+    } finally {
+      setUpdating(false);
     }
   };
 
@@ -90,52 +95,58 @@ export default function GoalDetailScreen({ route, navigation }: any) {
 
   if (loading) {
     return (
-      <View style={styles.centerContainer}>
+      <SafeAreaView style={styles.centerContainer} edges={['bottom']}>
         <ActivityIndicator size="large" color="#007AFF" />
-      </View>
+      </SafeAreaView>
     );
   }
 
   if (!goal) {
     return (
-      <View style={styles.centerContainer}>
+      <SafeAreaView style={styles.centerContainer} edges={['bottom']}>
         <Text>Goal not found</Text>
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.content}>
         <Text style={styles.title}>{goal.title}</Text>
-        
+
         {goal.description && (
           <Text style={styles.description}>{goal.description}</Text>
         )}
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Status</Text>
-          <View style={styles.statusContainer}>
-            {['not_started', 'in_progress', 'completed'].map((status) => (
-              <TouchableOpacity
-                key={status}
-                style={[
-                  styles.statusButton,
-                  goal.status === status && styles.statusButtonActive,
-                ]}
-                onPress={() => handleUpdateStatus(status)}
-              >
-                <Text
+          {updating ? (
+            <ActivityIndicator size="small" color="#007AFF" style={styles.statusLoader} />
+          ) : (
+            <View style={styles.statusContainer}>
+              {['not_started', 'in_progress', 'completed'].map((status) => (
+                <TouchableOpacity
+                  key={status}
                   style={[
-                    styles.statusButtonText,
-                    goal.status === status && styles.statusButtonTextActive,
+                    styles.statusButton,
+                    goal.status === status && styles.statusButtonActive,
                   ]}
+                  onPress={() => handleUpdateStatus(status)}
+                  disabled={updating}
                 >
-                  {status.replace('_', ' ')}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+                  <Text
+                    style={[
+                      styles.statusButtonText,
+                      goal.status === status && styles.statusButtonTextActive,
+                    ]}
+                  >
+                    {status.replace('_', ' ')}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
         </View>
 
         <View style={styles.section}>
@@ -161,7 +172,8 @@ export default function GoalDetailScreen({ route, navigation }: any) {
           <Text style={styles.deleteButtonText}>Delete Goal</Text>
         </TouchableOpacity>
       </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -169,6 +181,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  scrollView: {
+    flex: 1,
   },
   centerContainer: {
     flex: 1,
@@ -198,6 +213,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 12,
     color: '#333',
+  },
+  statusLoader: {
+    marginVertical: 12,
   },
   statusContainer: {
     flexDirection: 'row',
