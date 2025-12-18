@@ -1,5 +1,6 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Goal } from '../domain/data/models/Goal';
 
 // IMPORTANT: For Android emulator, use 'http://10.0.2.2:3000/api'
 // For iOS simulator, use 'http://localhost:3000/api'
@@ -58,13 +59,13 @@ export const userService = {
 };
 
 export const goalService = {
-  getGoals: async () => {
+  getGoals: async (): Promise<Goal[]> => {
     const response = await api.get('/goals');
-    return response.data;
+    return response.data.goals.map(g => Goal.fromApi(g));
   },
-  getGoal: async (id: number) => {
+  getGoal: async (id: number): Promise<Goal> => {
     const response = await api.get(`/goals/${id}`);
-    return response.data;
+    return Goal.fromApi(response.data);
   },
   createGoal: async (data: { title: string; description?: string; status?: string }) => {
     const response = await api.post('/goals', data);

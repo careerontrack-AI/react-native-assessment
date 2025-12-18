@@ -12,17 +12,9 @@ import {
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 
-// TODO: Task 1 - Complete Login Screen
-// The UI is already set up! You just need to:
-// 1. Call login() from useAuth() hook when button is pressed
-// 2. Show loading state (use the loading state variable)
-// 3. Show error message if login fails (use Alert.alert)
-// 
-// Hint: The form validation is already done, just implement handleLogin function!
-
 export default function LoginScreen() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('demo@careerontrack.ai');
+  const [password, setPassword] = useState('demo123');
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
@@ -30,44 +22,37 @@ export default function LoginScreen() {
 
   const validateForm = () => {
     const newErrors: { email?: string; password?: string } = {};
-    
+
     if (!email) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       newErrors.email = 'Email is invalid';
     }
-    
+
     if (!password) {
       newErrors.password = 'Password is required';
     } else if (password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleLogin = async () => {
-    // TODO: Implement login functionality
-    // 1. Validate form (already done above)
-    // 2. Set loading to true
-    // 3. Call login(email, password) from useAuth
-    // 4. Show error with Alert.alert if it fails
-    // 5. Set loading to false when done
-    
     if (!validateForm()) {
       return;
     }
 
-    // Your code here:
-    // setLoading(true);
-    // try {
-    //   await login(email, password);
-    // } catch (error: any) {
-    //   Alert.alert('Login Failed', error.response?.data?.error || 'Invalid email or password');
-    // } finally {
-    //   setLoading(false);
-    // }
+    setLoading(true)
+
+    try {
+      await login(email, password)
+    } catch (error) {
+      Alert.alert('Login Failed', error.response?.data?.error || 'Invalid email or password');
+    } finally {
+      setLoading(false)
+    }
   };
 
   return (
