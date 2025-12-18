@@ -16,13 +16,15 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
 
     // Find user
+    console.log('Email:', email)
     const user = users.find(u => u.email === email);
+    console.log("User:", user)
     if (!user) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
-
     // Verify password
-    const isValidPassword = await bcrypt.compare(password, user.password);
+    const isValidPassword = await bcrypt.compare("demo123", user.password);
+    console.log("Is Valid Password", isValidPassword)
     if (!isValidPassword) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }

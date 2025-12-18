@@ -9,16 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import { goalService } from '../services/api';
-
-interface Goal {
-  id: number;
-  title: string;
-  description: string;
-  status: 'not_started' | 'in_progress' | 'completed';
-  progress: number;
-  createdAt: string;
-  updatedAt: string;
-}
+import { Goal } from '@/domain/data/models/Goal';
 
 // TODO: Task 4 - Complete Goal Detail Screen
 // Requirements:
@@ -45,7 +36,6 @@ export default function GoalDetailScreen({ route, navigation }: any) {
       const data = await goalService.getGoal(goalId);
       setGoal(data);
     } catch (error) {
-      console.error('Error loading goal:', error);
       Alert.alert('Error', 'Failed to load goal details');
       navigation.goBack();
     } finally {
