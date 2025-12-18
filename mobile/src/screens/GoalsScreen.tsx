@@ -41,23 +41,15 @@ export default function GoalsScreen({ navigation }: any) {
   }, []);
 
   const loadGoals = async () => {
-    // TODO: Implement goal fetching
-    // 1. Set loading to true
-    // 2. Call goalService.getGoals()
-    // 3. Update goals state with response.goals
-    // 4. Show error with Alert.alert if it fails
-    // 5. Set loading to false when done
-    
-    // Your code here:
-    // try {
-    //   setLoading(true);
-    //   const response = await goalService.getGoals();
-    //   setGoals(response.goals || []);
-    // } catch (error) {
-    //   Alert.alert('Error', 'Failed to load goals');
-    // } finally {
-    //   setLoading(false);
-    // }
+    try {
+      setLoading(true);
+      const response = await goalService.getGoals();
+      setGoals(response.goals || []);
+    } catch (error) {
+      Alert.alert('Error', 'Failed to load goals');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onRefresh = async () => {

@@ -28,16 +28,22 @@ function MainTabs() {
 }
 
 export default function AppNavigator() {
-  // TODO: Replace this line with actual auth state
-  // const { isAuthenticated } = useAuth();
-  const isAuthenticated = false; // Remove this line and uncomment the line above
+  const { isAuthenticated } = useAuth();
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {isAuthenticated ? (
         <>
           <Stack.Screen name="MainTabs" component={MainTabs} />
-          <Stack.Screen name="GoalDetail" component={GoalDetailScreen} />
+          <Stack.Screen 
+            name="GoalDetail" 
+            component={GoalDetailScreen}
+            options={{ 
+              headerShown: true,
+              title: 'Goal Details',
+              headerBackTitle: 'Back'
+            }}
+          />
         </>
       ) : (
         <Stack.Screen name="Login" component={LoginScreen} />

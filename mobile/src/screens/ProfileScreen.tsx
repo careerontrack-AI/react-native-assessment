@@ -50,7 +50,7 @@ export default function ProfileScreen() {
     try {
       setLoading(true);
       const updated = await userService.updateProfile({ name, email });
-      updateUser(updated);
+      await updateUser(updated);
       setIsEditing(false);
       Alert.alert('Success', 'Profile updated successfully');
     } catch (error: any) {
