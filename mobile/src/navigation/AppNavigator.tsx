@@ -35,7 +35,15 @@ export default function AppNavigator() {
       {isAuthenticated ? (
         <>
           <Stack.Screen name="MainTabs" component={MainTabs} />
-          <Stack.Screen name="GoalDetail" component={GoalDetailScreen} />
+          <Stack.Screen 
+            name="GoalDetail" 
+            component={GoalDetailScreen}
+            options={{ 
+              headerShown: true,
+              title: 'Goal Details',
+              headerBackTitle: 'Back'
+            }}
+          />
         </>
       ) : (
         <Stack.Screen name="Login" component={LoginScreen} />
