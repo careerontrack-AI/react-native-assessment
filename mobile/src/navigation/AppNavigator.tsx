@@ -1,21 +1,15 @@
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import LoginScreen from '../screens/LoginScreen';
-import HomeScreen from '../screens/HomeScreen';
-import GoalsScreen from '../screens/GoalsScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import GoalDetailScreen from '../screens/GoalDetailScreen';
-import { useAuth } from '../context/AuthContext';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
+import React from "react";
+import { useAuth } from "../context/AuthContext";
+import GoalDetailScreen from "../screens/GoalDetailScreen";
+import GoalsScreen from "../screens/GoalsScreen";
+import HomeScreen from "../screens/HomeScreen";
+import LoginScreen from "../screens/LoginScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-
-// TODO: Task 3 - Complete Navigation
-// The navigation structure is already set up! You just need to:
-// 1. Get isAuthenticated from useAuth() hook
-// 2. Replace the hardcoded false with the actual auth state
-// That's it! The navigation will automatically show Login or Main screens based on auth state.
 
 function MainTabs() {
   return (
@@ -28,9 +22,7 @@ function MainTabs() {
 }
 
 export default function AppNavigator() {
-  // TODO: Replace this line with actual auth state
-  // const { isAuthenticated } = useAuth();
-  const isAuthenticated = false; // Remove this line and uncomment the line above
+  const { isAuthenticated } = useAuth();
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -45,4 +37,3 @@ export default function AppNavigator() {
     </Stack.Navigator>
   );
 }
-
