@@ -4,26 +4,28 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "node start-clean.js start",
-    "android": "node start-clean.js start --android",
-    "ios": "node start-clean.js start --ios",
-    "web": "node start-clean.js start --web"
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "node start-clean.js start --web",
+    "postinstall": "node scripts/patch-boost-podspec.js"
   },
   "dependencies": {
+    "@expo/webpack-config": "^19.0.0",
+    "@react-native-async-storage/async-storage": "1.18.2",
+    "@react-navigation/bottom-tabs": "^6.5.11",
+    "@react-navigation/native": "^6.1.9",
+    "@react-navigation/stack": "^6.3.20",
+    "axios": "^1.6.2",
     "expo": "~49.0.0",
     "expo-status-bar": "~1.6.0",
     "react": "18.2.0",
-    "react-native": "0.72.6",
-    "@react-navigation/native": "^6.1.9",
-    "@react-navigation/stack": "^6.3.20",
-    "@react-navigation/bottom-tabs": "^6.5.11",
-    "react-native-screens": "~3.22.0",
-    "react-native-safe-area-context": "4.6.3",
-    "react-native-gesture-handler": "~2.12.0",
-    "@react-native-async-storage/async-storage": "1.18.2",
-    "axios": "^1.6.2",
-    "react-native-web": "~0.19.6",
     "react-dom": "18.2.0",
-    "@expo/webpack-config": "^19.0.0"
+    "react-native": "0.72.6",
+    "react-native-gesture-handler": "~2.12.0",
+    "react-native-safe-area-context": "4.6.3",
+    "react-native-screens": "~3.22.0",
+    "react-native-web": "~0.19.6",
+    "expo-splash-screen": "~0.20.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

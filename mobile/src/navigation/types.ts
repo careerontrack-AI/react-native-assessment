@@ -1,4 +1,4 @@
-import { NavigatorScreenParams } from '@react-navigation/native';
+import { NavigatorScreenParams } from "@react-navigation/native";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -14,4 +14,3 @@ export type TabParamList = {
 
 // TODO: Task 5 - Add proper TypeScript types for navigation
 // Use these types in your navigation components for type safety
-

@@ -1,31 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
   ActivityIndicator,
   Alert,
-} from 'react-native';
-import { useAuth } from '../context/AuthContext';
-import { userService } from '../services/api';
-
-// TODO: Task 2 - Complete Profile Screen
-// Requirements:
-// 1. Display user information (name, email)
-// 2. Add edit profile functionality
-// 3. Integrate with userService.getProfile() and userService.updateProfile()
-// 4. Show loading and error states
-// 5. Add logout functionality
-// 6. Update local auth context after profile update
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { useAuth } from "../context/AuthContext";
+import { userService } from "../services/api";
 
 export default function ProfileScreen() {
   const { user, logout, updateUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState(user?.name || '');
-  const [email, setEmail] = useState(user?.email || '');
+  const [name, setName] = useState(user?.name || "");
+  const [email, setEmail] = useState(user?.email || "");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -40,7 +31,7 @@ export default function ProfileScreen() {
       setEmail(profile.email);
       updateUser(profile);
     } catch (error) {
-      Alert.alert('Error', 'Failed to load profile');
+      Alert.alert("Error", "Failed to load profile");
     } finally {
       setLoading(false);
     }
@@ -52,29 +43,28 @@ export default function ProfileScreen() {
       const updated = await userService.updateProfile({ name, email });
       updateUser(updated);
       setIsEditing(false);
-      Alert.alert('Success', 'Profile updated successfully');
+      Alert.alert("Success", "Profile updated successfully");
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.error || 'Failed to update profile');
+      Alert.alert(
+        "Error",
+        error.response?.data?.error || "Failed to update profile"
+      );
     } finally {
       setLoading(false);
     }
   };
 
   const handleLogout = () => {
-    Alert.alert(
-      'Logout',
-      'Are you sure you want to logout?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Logout',
-          style: 'destructive',
-          onPress: async () => {
-            await logout();
-          },
+    Alert.alert("Logout", "Are you sure you want to logout?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Logout",
+        style: "destructive",
+        onPress: async () => {
+          await logout();
         },
-      ]
-    );
+      },
+    ]);
   };
 
   if (loading && !user) {
@@ -138,8 +128,8 @@ export default function ProfileScreen() {
                 style={[styles.button, styles.cancelButton]}
                 onPress={() => {
                   setIsEditing(false);
-                  setName(user?.name || '');
-                  setEmail(user?.email || '');
+                  setName(user?.name || "");
+                  setEmail(user?.email || "");
                 }}
                 disabled={loading}
               >
@@ -160,7 +150,9 @@ export default function ProfileScreen() {
           style={[styles.button, styles.logoutButton]}
           onPress={handleLogout}
         >
-          <Text style={[styles.buttonText, styles.logoutButtonText]}>Logout</Text>
+          <Text style={[styles.buttonText, styles.logoutButtonText]}>
+            Logout
+          </Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -170,42 +162,42 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   centerContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   content: {
     padding: 20,
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 24,
-    color: '#1a1a1a',
+    color: "#1a1a1a",
   },
   section: {
     marginBottom: 24,
   },
   label: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
-    color: '#666',
+    color: "#666",
   },
   value: {
     fontSize: 16,
-    color: '#1a1a1a',
+    color: "#1a1a1a",
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "#f9f9f9",
   },
   buttonContainer: {
     marginTop: 8,
@@ -213,29 +205,28 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 8,
     padding: 16,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 12,
   },
   editButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: "#007AFF",
   },
   saveButton: {
-    backgroundColor: '#34C759',
+    backgroundColor: "#34C759",
   },
   cancelButton: {
-    backgroundColor: '#8E8E93',
+    backgroundColor: "#8E8E93",
   },
   logoutButton: {
-    backgroundColor: '#ff4444',
+    backgroundColor: "#ff4444",
     marginTop: 20,
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   logoutButtonText: {
-    color: '#fff',
+    color: "#fff",
   },
 });
-

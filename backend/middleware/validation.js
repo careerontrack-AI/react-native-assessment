@@ -1,4 +1,4 @@
-import { validationResult } from 'express-validator';
+import { validationResult } from "express-validator";
 
 /**
  * Middleware to handle validation errors
@@ -10,4 +10,3 @@ export const handleValidationErrors = (req, res, next) => {
   }
   next();
 };
-
