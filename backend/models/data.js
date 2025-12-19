@@ -5,11 +5,12 @@
 const users = [
   {
     id: 1,
-    email: 'demo@careerontrack.ai',
-    password: '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', // password: "demo123"
-    name: 'Demo User',
-    createdAt: new Date().toISOString()
-  }
+    email: "demo@careerontrack.ai",
+    // hash changed because of the password was not working with the previous hash
+    password: "$2b$12$G068rwjOpidj43OxGPWM7OIzbi1CLHh5hnSJ5qcngPkfO0WzqGGmy", // password: "demo123"
+    name: "Demo User",
+    createdAt: new Date().toISOString(),
+  },
 ];
 
 // Goals data (array is mutable)
@@ -17,35 +18,34 @@ const goals = [
   {
     id: 1,
     userId: 1,
-    title: 'Become a Senior Developer',
-    description: 'Advance to senior developer role within 12 months',
-    status: 'in_progress',
+    title: "Become a Senior Developer",
+    description: "Advance to senior developer role within 12 months",
+    status: "in_progress",
     progress: 60,
     createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   },
   {
     id: 2,
     userId: 1,
-    title: 'Learn React Native',
-    description: 'Master React Native for mobile development',
-    status: 'completed',
+    title: "Learn React Native",
+    description: "Master React Native for mobile development",
+    status: "completed",
     progress: 100,
     createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString()
+    updatedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     id: 3,
     userId: 1,
-    title: 'Build Portfolio App',
-    description: 'Create a showcase app for my portfolio',
-    status: 'not_started',
+    title: "Build Portfolio App",
+    description: "Create a showcase app for my portfolio",
+    status: "not_started",
     progress: 0,
     createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
-  }
+    updatedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+  },
 ];
 
 // Export arrays directly (they are mutable in JavaScript)
-export { users, goals };
-
+export { goals, users };
